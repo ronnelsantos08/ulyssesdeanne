@@ -556,7 +556,61 @@ const InviteSection: React.FC = () => {
 /**
  * Component to simulate stacked photo album pages.
  */
+const BookOfMemories: React.FC = () => {
+  // Use smaller images for mobile optimization
+  const pages = [
+    { key: 1, image: 'images/ourstory5.jpeg', label: "Our First Date" },
+    { key: 2, image: 'images/ourstory2.jpeg', label: "The Proposal" },
+    { key: 3, image: 'images/ourstory3.jpeg', label: "Travels" },
+    { key: 4, image: 'images/ourstory4.jpeg', label: "Adventures" },
+    { key: 5, image: 'images/ourstory1.jpeg', label: "Our Family" },
+  ];
 
+  const [topIndex, setTopIndex] = useState(pages.length - 1);
+
+  const handleClick = () => {
+    setTopIndex((prev) => (prev - 1 + pages.length) % pages.length);
+  };
+
+  const baseStyle =
+    "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out cursor-pointer";
+
+  // Only keep 3 cards in DOM for performance
+  const getVisiblePages = () => {
+    const visible: typeof pages = [];
+    for (let i = 0; i < 3; i++) {
+      const idx = (topIndex - i + pages.length) % pages.length;
+      visible.push(pages[idx]);
+    }
+    return visible.reverse(); // So top page is rendered last
+  };
+
+  const rotations = ['-rotate-3', 'rotate-1', '-rotate-1'];
+  const translates = ['-translate-x-3', 'translate-x-2', '-translate-x-1'];
+
+  return (
+    <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
+      {getVisiblePages().map((page, idx) => (
+        <div
+          key={page.key}
+          className={`${baseStyle} ${rotations[idx]} ${translates[idx]} flex items-center justify-center text-center font-serif italic`}
+          style={{
+            backgroundImage: `url(${page.image})`,
+            color: '#F5F5F5',
+            zIndex: idx + 1,
+            top: `${idx * 5}px`,
+            left: 0,
+          }}
+          onClick={handleClick}
+        >
+          <div className="bg-black/30 px-2 py-1 rounded">
+            <span className="text-sm uppercase tracking-wider">{page.label}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 
 /**
@@ -583,7 +637,7 @@ const PreludeSection: React.FC = () => (
       <div className="grid lg:grid-cols-12 gap-12 items-center">
         {/* LEFT COLUMN: Book/Image Fanning Effect (Col Span 5) */}
         <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
-       
+          <BookOfMemories />
         </div>
 
         {/* RIGHT COLUMN: Story Text (Col Span 7) */}
@@ -1598,7 +1652,7 @@ const DressCodeSection: React.FC = () => (
           className="mt-12 text-base md:text-lg text-center italic border-t border-stone-200 pt-6"
           style={{ color: "#8B8589" }}
         >
-          Kindly avoid wearing white, ivory, or cream — these shades are reserved for the bride.
+         We kindly ask all guests to follow the suggested attire for a cohesive and elegant celebration.
         </p>
 
         {/* Visual Examples */}
