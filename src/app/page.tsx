@@ -13,7 +13,7 @@ const COUPLE_INFO = {
   time: "2:30 PM", 
   venue: "Maria Paz Royale Garden", 
   address: "Brgy. Sta Filomena, San Pablo City", 
-  rsvpDeadline: "December 15, 2026",
+  rsvpDeadline: "December 10, 2025",
   dressCode: "Formal Attire (Black tie optional)",
   weddingDate: new Date("January 10, 2026 14:30:00").getTime(), 
   
@@ -878,13 +878,8 @@ const RsvpSection: React.FC = () => {
 
 const PrenupGallerySection: React.FC = () => {
   // Images array (using larger resolution for the main preview)
-  const images = [
-      "https://images.unsplash.com/photo-1517482083377-90c765956799?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDE3fHx3ZWRkaW5nJTIwcHJlbnVwfGVufDB8fHx8MTcyMDczOTc5N3ww&lib=rb-4.0.3&q=80&w=1080", 
-      "https://images.unsplash.com/photo-1627993074852-c8402b851b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDJ8fGNvdXBsZSUyMGxhdWghaW5nJTIwcm9tYW50aWN8ZW58MHx8fHwxNzIwNzM5ODMyfDA&lib=rb-4.0.3&q=80&w=1080", 
-      "https://images.unsplash.com/photo-1582227189585-6ff848386377?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDExfHx3ZWRkaW5nJTIwcHJlbnVwJTIwZmllbGR8ZW58MHx8fHwxNzIwNzM5ODMyfDA&lib=rb-4.0.3&q=80&w=1080", 
-      "https://images.unsplash.com/photo-1542475727-2c9497e70876?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDIyfHx3ZWRkaW5nJTIwcHJlbnVwJTIwcmVhbHxlbnwwfHx8fDE3MjA3Mzk5NTZ8MA&lib=rb-4.0.3&q=80&w=1080", 
-      "https://images.unsplash.com/photo-1627448350029-43c2c13ac36e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDIzfHx3ZWRkaW5nJTIwcHJlbnVwfGVufDB8fHx8MTcyMDczOTc5N3ww&lib=rb-4.0.3&q=80&w=1080",
-  ];
+  const images = Array.from({ length: 34 }, (_, i) => `/images/prenup${i + 1}.jpeg`);
+
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
