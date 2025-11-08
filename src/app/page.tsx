@@ -142,6 +142,7 @@ const TextCarousel: React.FC = () => {
 // --- NavBar with expanded PageType ---
 const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType) => void }> = ({ currentPage, setCurrentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const handleNavClick = useCallback((page: PageType, section: string) => {
     setCurrentPage(page);
@@ -149,64 +150,86 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
     document.querySelector(section)?.scrollIntoView({ behavior: 'smooth' });
   }, [setCurrentPage]);
 
-  return (
-    <nav className={`fixed top-0 left-0 w-full bg-[${COLORS.oldLavender}]/50 backdrop-blur-sm z-50 shadow-lg`}>
-  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex justify-between items-center h-20">
-      
-      {/* Logo / Couple Name */}
-      <a
-        href="#home"
-        onClick={() => handleNavClick('home', '#home')}
-        className={`text-2xl font-serif font-bold text-[${COLORS.almond}] tracking-widest`}
-      >
-        {COUPLE_INFO.bride} & {COUPLE_INFO.groom}
-      </a>
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-      {/* Desktop Links */}
-      <div className="hidden lg:flex space-x-6">
-        {NAV_LINKS.map(link => (
-          <button
-            key={link.name}
-            onClick={() => handleNavClick(link.page as PageType, link.section)}
-            className={`text-sm font-serif transition duration-200 uppercase tracking-widest relative px-1 py-2
-              ${
-                currentPage === link.page
-                  ? `text-[${COLORS.almond}] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[${COLORS.mountainPink}]`
-                  : `text-[${COLORS.silverPink}] hover:text-[${COLORS.mountainPink}]`
-              }`}
+  return (
+    <nav
+      style={{
+        backgroundColor: scrolled ? 'rgba(121,106,126,0.85)' : COLORS.oldLavender,
+        backdropFilter: scrolled ? 'blur(6px)' : undefined,
+        transition: 'background-color 0.3s',
+      }}
+      className="fixed top-0 left-0 w-full z-50 shadow-lg"
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <a
+            href="#home"
+            onClick={() => handleNavClick('home', '#home')}
+            style={{ color: COLORS.almond }}
+            className="text-2xl font-serif font-bold tracking-widest"
           >
-            {link.name}
+            {COUPLE_INFO.bride} & {COUPLE_INFO.groom}
+          </a>
+
+          {/* Desktop Links */}
+          <div className="hidden lg:flex space-x-6">
+            {NAV_LINKS.map(link => (
+              <button
+                key={link.name}
+                onClick={() => handleNavClick(link.page as PageType, link.section)}
+                style={{
+                  color: currentPage === link.page ? COLORS.almond : COLORS.almond,
+                  fontWeight: currentPage === link.page ? 'bold' : 'normal',
+                  position: 'relative',
+                }}
+                className="text-sm font-serif transition duration-200 uppercase tracking-widest relative px-1 py-2"
+              >
+                {link.name}
+                {currentPage === link.page && (
+                  <span
+                    style={{ backgroundColor: COLORS.mountainPink }}
+                    className="absolute bottom-0 left-0 w-full h-0.5"
+                  ></span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="lg:hidden p-2 rounded-full transition duration-150"
+            style={{ color: COLORS.almond }}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
-        ))}
+        </div>
       </div>
 
-      {/* Mobile Menu Toggle */}
-      <button
-        className={`lg:hidden text-[${COLORS.silverPink}] hover:text-[${COLORS.mountainPink}] p-2 rounded-full transition duration-150`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
-    </div>
-  </div>
-
-  {/* Mobile Menu */}
-  {isOpen && (
-    <div className={`lg:hidden pb-4 transition-all duration-300 ease-in-out bg-[${COLORS.taupeGray}]/95`}>
-      {NAV_LINKS.map(link => (
-        <button
-          key={link.name}
-          onClick={() => handleNavClick(link.page as PageType, link.section)}
-          className={`block w-full text-left px-4 py-3 text-base text-[${COLORS.silverPink}] hover:bg-[${COLORS.mountainPink}]/50 hover:text-[${COLORS.almond}] uppercase tracking-wider font-medium border-t border-[${COLORS.almond}]/20`}
-        >
-          {link.name}
-        </button>
-      ))}
-    </div>
-  )}
-</nav>
-
+      {isOpen && (
+        <div style={{ backgroundColor: COLORS.taupeGray }} className="lg:hidden pb-4 transition-all duration-300 ease-in-out">
+          {NAV_LINKS.map(link => (
+            <button
+              key={link.name}
+              onClick={() => handleNavClick(link.page as PageType, link.section)}
+              style={{
+                color: COLORS.almond,
+                borderTop: `1px solid ${COLORS.almond}33`, // 20% opacity
+              }}
+              className="block w-full text-left px-4 py-3 text-base uppercase tracking-wider font-medium hover:bg-[#906272] hover:text-white"
+            >
+              {link.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </nav>
   );
 };
 
@@ -224,72 +247,77 @@ const CoverSection: React.FC = () => (
         filter: 'brightness(0.5)'
       }}
     >
-      <div className="absolute inset-0 bg-black/40 flex items-center justify-center"></div>
+      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}></div>
     </div>
 
     <TextCarousel />
 
     {/* Content Box */}
-    <div className="relative z-10 text-center p-6 sm:p-8 md:p-12 bg-black/40 backdrop-blur-sm rounded-xl max-w-xl mx-4 border-2 border-[#906272]">
-      <p className="text-lg md:text-xl font-serif italic mb-4 tracking-widest">
+    <div className="relative z-10 text-center p-6 sm:p-8 md:p-12 rounded-xl max-w-xl mx-4" style={{
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      border: `2px solid ${COLORS.mountainPink}`,
+    }}>
+      <p className="text-lg md:text-xl font-serif italic mb-4 tracking-widest" style={{ color: COLORS.almond }}>
         The wedding celebration of
       </p>
 
       {/* Names */}
-      <h1 className="flex flex-wrap justify-center items-center text-white font-serif font-bold mb-4 leading-tight">
+      <h1 className="flex flex-wrap justify-center items-center font-serif font-bold mb-4 leading-tight">
         <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">{COUPLE_INFO.bride}</span>
-        <span className={`mx-2 text-[${COLORS.mountainPink}] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl`}> &amp; </span>
+        <span className="mx-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ color: COLORS.mountainPink }}> &amp; </span>
         <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">{COUPLE_INFO.groom}</span>
       </h1>
 
-      <p className="text-xl sm:text-2xl md:text-3xl font-serif border-y border-white/50 py-3 mt-6">
+      <p className="text-xl sm:text-2xl md:text-3xl font-serif border-y py-3 mt-6" style={{ borderColor: 'rgba(255,255,255,0.5)', color: COLORS.almond }}>
         {COUPLE_INFO.date}
       </p>
 
-      <p className="text-lg sm:text-xl mt-4 font-light tracking-wider">
+      <p className="text-lg sm:text-xl mt-4 font-light tracking-wider" style={{ color: COLORS.almond }}>
         {COUPLE_INFO.venue}
       </p>
 
       {/* RSVP Button */}
       <a 
         href="#rsvp"
-        className={`mt-8 inline-flex items-center px-8 py-3 border border-[${COLORS.mountainPink}] text-white uppercase tracking-widest hover:bg-[${COLORS.mountainPink}] transition duration-300 rounded-full text-sm sm:text-base font-semibold shadow-lg`}
+        style={{
+          borderColor: COLORS.mountainPink,
+          color: COLORS.almond,
+        }}
+        className="mt-8 inline-flex items-center px-8 py-3 uppercase tracking-widest hover:bg-[#906272] transition duration-300 rounded-full text-sm sm:text-base font-semibold shadow-lg"
       >
-        RSVP Now <Heart className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+        RSVP Now <Heart className="ml-2 w-4 h-4 sm:w-5 sm:h-5" style={{ color: COLORS.almond }} />
       </a>
     </div>
   </header>
 );
 
 
+
 /**
  * NEW SECTION: Invitation Text (Inserted after CoverSection)
  */
 const InviteSection: React.FC = () => (
-    // Background: Silver Pink (a soft, gentle transition from the dark hero)
-    <section id="invite" className={`py-16 md:py-20 bg-[${COLORS.silverPink}] text-stone-900`}>
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-            {/* Headline/Title: Old Lavender */}
-            <h2 className={`font-serif text-4xl md:text-5xl text-[${COLORS.oldLavender}] mb-8`}>
-                We Invite You
-            </h2>
-            <div className="max-w-3xl mx-auto">
-                {/* Quote: Taupe Gray text, italic, large */}
-                <p className={`text-xl md:text-2xl italic text-[${COLORS.taupeGray}] leading-relaxed font-light`}>
-                    Our paths crossed by chance, but our hearts chose each other with purpose.
-                    Now, we're ready to celebrate a love that's grown deep and true.
-                    Please join us on January 10, 2026 as we begin our next chapter, surrounded by the warmth of your presence.
-                </p>
-            </div>
-            {/* Signature/Date: Mountain Pink accent color */}
-            <p className={`mt-10 text-lg text-[${COLORS.mountainPink}] font-serif font-semibold`}>
-                Deanne & Ulysses
-                <br />
-                <span className="text-sm uppercase tracking-wider text-stone-500">The Beginning of Forever</span>
-            </p>
-        </div>
-    </section>
+  <section id="invite" className="py-16 md:py-20" style={{ backgroundColor: COLORS.silverPink, color: '#1f2937' }}>
+    <div className="container mx-auto px-6 max-w-4xl text-center">
+      <h2 className="font-serif text-4xl md:text-5xl mb-8" style={{ color: COLORS.oldLavender }}>
+        We Invite You
+      </h2>
+      <div className="max-w-3xl mx-auto">
+        <p className="text-xl md:text-2xl italic leading-relaxed font-light" style={{ color: COLORS.taupeGray }}>
+          Our paths crossed by chance, but our hearts chose each other with purpose.
+          Now, we're ready to celebrate a love that's grown deep and true.
+          Please join us on January 10, 2026 as we begin our next chapter, surrounded by the warmth of your presence.
+        </p>
+      </div>
+      <p className="mt-10 text-lg font-serif font-semibold" style={{ color: COLORS.mountainPink }}>
+        Deanne & Ulysses
+        <br />
+        <span className="text-sm uppercase tracking-wider" style={{ color: '#6b7280' }}>The Beginning of Forever</span>
+      </p>
+    </div>
+  </section>
 );
+
 
 
 /**
@@ -341,35 +369,50 @@ const BookOfMemories: React.FC = () => {
  * Section for the couple's story (Story).
  */
 const PreludeSection: React.FC = () => (
-  // Background: Almond
-  <section id="story" className={`py-20 bg-[${COLORS.almond}] text-stone-900`}>
+  <section
+    id="story"
+    className="py-20"
+    style={{ backgroundColor: COLORS.almond, color: '#1f2937' }} // base text color
+  >
     <div className="container mx-auto px-6 max-w-6xl">
       {/* Headline: Old Lavender */}
-      <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>Our Story</h2>
-      
+      <h2
+        className="text-4xl font-serif text-center mb-12 border-b-2 pb-2 inline-block"
+        style={{
+          color: COLORS.oldLavender,
+          borderColor: `${COLORS.mountainPink}80`, // 50% opacity
+        }}
+      >
+        Our Story
+      </h2>
+
       <div className="grid lg:grid-cols-12 gap-12 items-center">
-        
         {/* LEFT COLUMN: Book/Image Fanning Effect (Col Span 5) */}
         <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
-            {/* NEW THEME: Book component now uses all colors */}
-            <BookOfMemories />
+          <BookOfMemories />
         </div>
-        
+
         {/* RIGHT COLUMN: Story Text (Col Span 7) */}
         <div className="lg:col-span-7 text-center lg:text-left order-1 lg:order-2">
-            {/* Text: Taupe Gray */}
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed mb-6`}>
-                Our story began in the most unexpected way—with a simple message on Facebook Messenger that changed everything. What started as a friendly chat soon turned into daily conversations filled with laughter, late-night stories, and a spark we couldn't ignore. Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES.
-            </p>
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed mb-8`}>
-                After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared.
-            </p>
-            {/* Quote: Old Lavender */}
-            <p className={`text-xl font-serif italic text-[${COLORS.oldLavender}]`}>
-                "Every great love story is beautiful, but ours is my favorite."
-            </p>
+          <p
+            className="text-lg leading-relaxed mb-6"
+            style={{ color: COLORS.taupeGray }}
+          >
+            Our story began in the most unexpected way—with a simple message on Facebook Messenger that changed everything. What started as a friendly chat soon turned into daily conversations filled with laughter, late-night stories, and a spark we couldn't ignore. Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES.
+          </p>
+          <p
+            className="text-lg leading-relaxed mb-8"
+            style={{ color: COLORS.taupeGray }}
+          >
+            After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared.
+          </p>
+          <p
+            className="text-xl font-serif italic"
+            style={{ color: COLORS.oldLavender }}
+          >
+            "Every great love story is beautiful, but ours is my favorite."
+          </p>
         </div>
-        
       </div>
     </div>
   </section>
@@ -379,169 +422,223 @@ const PreludeSection: React.FC = () => (
  * Section for the Countdown Timer (Countdown).
  */
 const CountdownSection: React.FC = () => {
-    const timeLeft = useCountdown(COUPLE_INFO.weddingDate);
-    const isPast = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+  const timeLeft = useCountdown(COUPLE_INFO.weddingDate);
+  const isPast = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
 
-    const TimeBlock: React.FC<{ value: number, label: string }> = ({ value, label }) => (
-        <div className="text-center p-4">
-            {/* Old Lavender digits (good contrast against white card) */}
-            <div className={`text-5xl font-sans font-extrabold text-[${COLORS.oldLavender}] leading-none`}>
-                {String(value).padStart(2, '0')}
-            </div>
-            {/* Taupe Gray labels (good contrast against white card) */}
-            <div className={`text-sm uppercase tracking-wider text-[${COLORS.taupeGray}] mt-1`}>
-                {label}
-            </div>
-        </div>
-    );
+  const TimeBlock: React.FC<{ value: number, label: string }> = ({ value, label }) => (
+      <div className="text-center p-4">
+          {/* Old Lavender digits */}
+          <div
+              className="text-5xl font-sans font-extrabold leading-none"
+              style={{ color: COLORS.oldLavender }}
+          >
+              {String(value).padStart(2, '0')}
+          </div>
+          {/* Taupe Gray labels */}
+          <div
+              className="text-sm uppercase tracking-wider mt-1"
+              style={{ color: COLORS.taupeGray }}
+          >
+              {label}
+          </div>
+      </div>
+  );
 
-    return (
-        // Set section to relative and give it padding and minimum height
-        <section id="countdown" className="relative py-20 min-h-[300px] overflow-hidden">
-            {/* Background Image and Overlay */}
-            <div 
-                className="absolute inset-0 bg-cover bg-center" 
-                style={{ 
-                    // Romantic ambient lighting image
-                    backgroundImage: 'url("https://images.unsplash.com/photo-1596280045339-44431ccdb7d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDEzfHxnbG93aW5nJTIwd2VkZGluZyUyMGxpZ2h0c3xlbnwwfHx8fDE3MTkyNjYyMjh8MA&lib=rb-4.0.3&q=80&w=1080")', 
-                }}
-            >
-                {/* Dark overlay for contrast, using Mountain Pink. Increased opacity to 90% for better readability. */}
-                <div className={`absolute inset-0 bg-[${COLORS.mountainPink}]/90`}></div> 
-            </div>
+  return (
+      <section className="relative py-20 min-h-[300px] overflow-hidden" id="countdown">
+          {/* Background Image */}
+          <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                  backgroundImage:
+                      'url("https://images.unsplash.com/photo-1596280045339-44431ccdb7d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDEzfHxnbG93aW5nJTIwd2VkZGluZyUyMGxpZ2h0c3xlbnwwfHx8fDE3MTkyNjYyMjh8MA&lib=rb-4.0.3&q=80&w=1080")',
+              }}
+          >
+              {/* Dark overlay with Mountain Pink */}
+              <div
+                  className="absolute inset-0"
+                  style={{ backgroundColor: COLORS.mountainPink + 'E6' }} // 90% opacity
+              ></div>
+          </div>
 
-            {/* Content sits on top of the image (relative z-10) */}
-            <div className="relative z-10 container mx-auto px-6 max-w-4xl text-center">
-                {/* Almond text (high contrast against dark overlay) */}
-                <h3 className={`text-3xl font-serif mb-8 flex items-center justify-center text-[${COLORS.almond}]`}>
-                    <Clock className={`w-6 h-6 mr-3 text-[${COLORS.almond}]`} /> 
-                    {isPast ? "We are married!" : "The day is coming soon..."}
-                </h3>
-                
-                {!isPast ? (
-                    // White card for contrast
-                    <div className={`grid grid-cols-4 gap-4 max-w-md mx-auto bg-white p-6 rounded-xl shadow-xl border-t-4 border-[${COLORS.oldLavender}]`}>
-                        <TimeBlock value={timeLeft.days} label="Days" />
-                        <TimeBlock value={timeLeft.hours} label="Hours" />
-                        <TimeBlock value={timeLeft.minutes} label="Mins" />
-                        <TimeBlock value={timeLeft.seconds} label="Secs" />
-                    </div>
-                ) : (
-                    <p className={`text-xl text-[${COLORS.almond}] font-serif italic`}>
-                        Thank you for celebrating with us!
-                    </p>
-                )}
-            </div>
-        </section>
-    );
+          {/* Content */}
+          <div className="relative z-10 container mx-auto px-6 max-w-4xl text-center">
+              {/* Almond text */}
+              <h3
+                  className="text-3xl font-serif mb-8 flex items-center justify-center"
+                  style={{ color: COLORS.almond }}
+              >
+                  <Clock className="w-6 h-6 mr-3" style={{ color: COLORS.almond }} />
+                  {isPast ? 'We are married!' : 'The day is coming soon...'}
+              </h3>
+
+              {!isPast ? (
+                  <div
+                      className="grid grid-cols-4 gap-4 max-w-md mx-auto bg-white p-6 rounded-xl shadow-xl border-t-4"
+                      style={{ borderColor: COLORS.oldLavender }}
+                  >
+                      <TimeBlock value={timeLeft.days} label="Days" />
+                      <TimeBlock value={timeLeft.hours} label="Hours" />
+                      <TimeBlock value={timeLeft.minutes} label="Mins" />
+                      <TimeBlock value={timeLeft.seconds} label="Secs" />
+                  </div>
+              ) : (
+                  <p
+                      className="text-xl font-serif italic"
+                      style={{ color: COLORS.almond }}
+                  >
+                      Thank you for celebrating with us!
+                  </p>
+              )}
+          </div>
+      </section>
+  );
 };
 
 
 /**
  * Section for RSVP form (RSVP).
  */
+const GOOGLE_FORM_ACTION_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdzaZbswV9GI_XzfylJ6kmdO_BIYwKwpW3CHFpQ9rm4n5itUg/formResponse';
+
 const RsvpSection: React.FC = () => {
-  const [formData, setFormData] = useState<RsvpFormData>({
-    name: '',
-    attending: null,
-    guests: 1,
-    dietaryRestrictions: '',
-  });
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [isAttending, setIsAttending] = useState(true);
+  const [guests, setGuests] = useState(1);
+  const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: (name === 'guests') ? parseInt(value) : value,
-    }));
+  const guestOptions = useMemo(() => {
+    return Array.from({ length: 6 }, (_, i) => (
+      <option key={i + 1} value={i + 1}>
+        {i + 1} Person{i + 1 > 1 ? 's' : ''}
+      </option>
+    ));
   }, []);
 
-  const handleAttendingChange = useCallback((value: 'yes' | 'no') => {
-    setFormData(prev => ({
-      ...prev,
-      attending: value,
-      guests: value === 'no' ? 0 : 1, 
-    }));
-  }, []);
-
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
-    if (!formData.name || !formData.attending) {
-      setError('Please fill in your name and selection.');
+
+    if (!name || !mobile) {
+      setError('Please provide your name and mobile number.');
       return;
     }
-    
-    if (formData.attending === 'yes' && formData.guests < 1) {
-        setError('Attending RSVP must include at least 1 guest.');
-        return;
+
+    if (isAttending && guests < 1) {
+      setError('Attending RSVP must include at least 1 guest.');
+      return;
     }
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500)); 
-    console.log("Submitting RSVP Data:", formData);
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-  }, [formData]);
-  
-  const guestOptions = useMemo(() => {
-    const options = [];
-    for (let i = 1; i <= 6; i++) {
-      options.push(<option key={i} value={i}>{i} Person{i > 1 ? 's' : ''}</option>);
+
+    const formData = new FormData();
+    formData.append('entry.1127358935', name);           // Full Name
+    formData.append('entry.1824607770', mobile);         // Mobile Number
+    formData.append('entry.766160335', isAttending ? 'Yes' : 'No'); // Attending
+    formData.append('entry.1059071237', guests.toString());         // Guests
+    formData.append('entry.1669598374', message);        // Message
+
+    try {
+      await fetch(GOOGLE_FORM_ACTION_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData,
+      });
+
+      setIsSubmitted(true);
+      setName('');
+      setMobile('');
+      setIsAttending(true);
+      setGuests(1);
+      setMessage('');
+    } catch (err) {
+      console.error('RSVP submission error:', err);
+      setError('Failed to submit RSVP. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-    return options;
-  }, []);
+  };
 
   return (
-    // Background: Almond
     <section id="rsvp" className={`py-20 bg-[${COLORS.almond}] text-stone-900`}>
       <div className="container mx-auto px-6 max-w-xl">
-        {/* Headline: Old Lavender */}
-        <h2 className={`text-4xl font-serif text-center mb-4 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>Kindly RSVP</h2>
+        <h2
+          className={`text-4xl font-serif text-center mb-4 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}
+        >
+          Kindly RSVP
+        </h2>
         <p className={`text-center text-lg mb-8 text-[${COLORS.taupeGray}]`}>
-          Please confirm your attendance by <span className={`font-semibold text-[${COLORS.mountainPink}]`}>{COUPLE_INFO.rsvpDeadline}</span>.
+          Please confirm your attendance by{' '}
+          <span className={`font-semibold text-[${COLORS.mountainPink}]`}>{COUPLE_INFO.rsvpDeadline}</span>.
         </p>
 
         {isSubmitted ? (
           <div className="text-center p-10 bg-green-50 border-4 border-green-200 rounded-xl shadow-lg">
             <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-600" />
             <h3 className="text-2xl font-serif text-green-700">Thank You!</h3>
-            <p className="text-lg mt-2">
-              Your RSVP has been recorded. We can't wait to see you!
-            </p>
+            <p className="text-lg mt-2">Your RSVP has been recorded. We can't wait to see you!</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6 p-8 border border-stone-200 rounded-xl shadow-2xl bg-white">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6 p-8 border border-stone-200 rounded-xl shadow-2xl bg-white"
+          >
+            {/* Name */}
             <div>
-              <label htmlFor="name" className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}>Full Name</label>
+              <label
+                htmlFor="name"
+                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+              >
+                Full Name
+              </label>
               <input
                 type="text"
                 id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 disabled={isSubmitting}
-                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
                 placeholder="John & Jane Doe"
+                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
               />
             </div>
 
-            {/* Attending Selection */}
+            {/* Mobile */}
             <div>
-              <label className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-2`}>Will you be able to attend?</label>
+              <label
+                htmlFor="mobile"
+                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+              >
+                Mobile Number
+              </label>
+              <input
+                type="tel"
+                id="mobile"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                disabled={isSubmitting}
+                placeholder="09123456789"
+                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
+              />
+            </div>
+
+            {/* Attending */}
+            <div>
+              <label className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-2`}>
+                Will you be able to attend?
+              </label>
               <div className="flex space-x-4">
                 <button
                   type="button"
-                  onClick={() => handleAttendingChange('yes')}
+                  onClick={() => setIsAttending(true)}
                   disabled={isSubmitting}
-                  // NEW THEME: Mountain Pink solid fill
                   className={`flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200 ${
-                    formData.attending === 'yes' 
-                      ? `bg-[${COLORS.mountainPink}] text-white shadow-md` 
+                    isAttending
+                      ? `bg-[${COLORS.mountainPink}] text-white shadow-md`
                       : `bg-stone-100 text-[${COLORS.taupeGray}] hover:bg-[${COLORS.silverPink}]/50 border border-stone-300`
                   }`}
                 >
@@ -549,12 +646,11 @@ const RsvpSection: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleAttendingChange('no')}
+                  onClick={() => setIsAttending(false)}
                   disabled={isSubmitting}
-                  // NEW THEME: Taupe Gray solid fill
                   className={`flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200 ${
-                    formData.attending === 'no' 
-                      ? `bg-[${COLORS.taupeGray}] text-white shadow-md` 
+                    !isAttending
+                      ? `bg-[${COLORS.taupeGray}] text-white shadow-md`
                       : `bg-stone-100 text-[${COLORS.taupeGray}] hover:bg-[${COLORS.taupeGray}]/20 border border-stone-300`
                   }`}
                 >
@@ -563,54 +659,75 @@ const RsvpSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Guests & Dietary Restrictions */}
-            {formData.attending === 'yes' && (
-              <>
-                <div>
-                  <label htmlFor="guests" className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}>Number of Guests (Including you)</label>
-                  <select
-                    id="guests"
-                    name="guests"
-                    value={formData.guests}
-                    onChange={handleChange}
-                    disabled={isSubmitting}
-                    className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150 appearance-none bg-white`}
-                  >
-                    {guestOptions}
-                  </select>
-                </div>
-                
-                <div>
-                  <label htmlFor="dietaryRestrictions" className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}>Dietary Restrictions / Allergies (Optional)</label>
-                  <textarea
-                    id="dietaryRestrictions"
-                    name="dietaryRestrictions"
-                    rows={3}
-                    value={formData.dietaryRestrictions}
-                    onChange={handleChange}
-                    disabled={isSubmitting}
-                    className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
-                    placeholder="E.g., Gluten-free, Vegan, Nut allergy"
-                  />
-                </div>
-              </>
+            {/* Guests */}
+            {isAttending && (
+              <div>
+                <label
+                  htmlFor="guests"
+                  className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+                >
+                  Number of Guests (Including you)
+                </label>
+                <select
+                  id="guests"
+                  value={guests}
+                  onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
+                  disabled={isSubmitting}
+                  className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150 appearance-none bg-white`}
+                >
+                  {guestOptions}
+                </select>
+              </div>
             )}
 
-            {error && (
-              <p className="text-red-500 text-sm font-medium text-center">{error}</p>
-            )}
+            {/* Message */}
+            <div>
+              <label
+                htmlFor="message"
+                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+              >
+                Message (Optional)
+              </label>
+              <textarea
+                id="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                disabled={isSubmitting}
+                placeholder="Any special requests or messages?"
+                rows={3}
+                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
+              />
+            </div>
 
-            {/* Submit Button */}
+            {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
+
+            {/* Submit */}
             <button
               type="submit"
-              disabled={isSubmitting || formData.attending === null}
+              disabled={isSubmitting}
               className={`w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-[${COLORS.mountainPink}] hover:bg-[${COLORS.oldLavender}] disabled:bg-stone-400 transition duration-300 transform hover:scale-[1.01]`}
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Sending...
                 </>
