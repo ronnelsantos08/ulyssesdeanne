@@ -394,7 +394,8 @@ const InviteSection: React.FC = () => {
         <img
           src={decorationUrl}
           alt="Decoration"
-          className="absolute bottom-[-20px] right-[-20px] w-24 md:w-32 pointer-events-none bounce"
+          className="absolute -bottom-10 -right-5 xl:-bottom-25 xl:-right-25 md:-bottom-25 md:-right-1 w-[100px] md:w-[200px] sm:w-[100px] pointer-events-none bounce"
+
           onError={(e) => {
             e.currentTarget.src = "https://placehold.co/150x150/FFD1DC/6d28d9?text=Deco";
             e.currentTarget.onerror = null;
@@ -1417,20 +1418,99 @@ const EntourageSection: React.FC = () => (
  * Section for Dress Code information.
  */
 const DressCodeSection: React.FC = () => (
-  // Background: Silver Pink
-  <section id="dresscode" className={`py-20 bg-[${COLORS.silverPink}] text-stone-900`}>
-    <div className="container mx-auto px-6 max-w-2xl">
-      {/* Headline: Old Lavender */}
-      <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>Attire Guidance</h2>
-      
-      <div className="p-10 bg-white shadow-2xl rounded-xl text-center border-t-4 border-[${COLORS.mountainPink}]">
-        <Heart className={`w-10 h-10 mx-auto mb-4 text-[${COLORS.mountainPink}]`} />
-        <h3 className="text-3xl font-semibold font-serif mb-2">Dress Code</h3>
-        <p className={`text-2xl text-[${COLORS.taupeGray}] font-medium`}>{COUPLE_INFO.dressCode.split(' ')[0]} Attire</p>
-        <p className={`text-lg text-[${COLORS.taupeGray}] italic mt-1`}>({COUPLE_INFO.dressCode.substring(COUPLE_INFO.dressCode.indexOf('(') + 1, COUPLE_INFO.dressCode.indexOf(')'))}</p>
-        <p className={`mt-6 text-base text-[${COLORS.taupeGray}]`}>
-          We invite you to wear your finest formal wear. Please avoid colors traditionally reserved for the bride (white, ivory, or cream).
+  <section
+    id="attire"
+    className={`relative py-24 text-stone-900 bg-fixed bg-center bg-cover`}
+    style={{
+      backgroundImage: "url('images/prenup20.jpeg')", // 🖼️ replace with your image path
+    }}
+  >
+    {/* Overlay for readability */}
+    <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" aria-hidden="true"></div>
+
+    <div className="relative container mx-auto px-6 max-w-3xl text-center z-10">
+      {/* Elegant Headline */}
+      <h2
+        className={`text-4xl md:text-5xl font-serif tracking-wide mb-10 text-[${COLORS.oldLavender}]`}
+      >
+        Attire Guidance
+      </h2>
+
+      {/* Main Card */}
+      <div className="p-10 md:p-12 bg-white/90 shadow-2xl rounded-2xl border-t-4 border-[${COLORS.mountainPink}]">
+        <div className="space-y-10 text-left">
+          {/* Principal Sponsors */}
+          <div
+            className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}] shadow-sm`}
+          >
+            <h4 className={`font-serif text-2xl text-[${COLORS.oldLavender}] mb-3`}>
+              Principal Sponsors
+            </h4>
+            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+              <strong>Gentlemen:</strong> Barong Tagalog
+            </p>
+            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+              <strong>Ladies:</strong> Filipiniana Dress
+            </p>
+          </div>
+
+          {/* Guests */}
+          <div
+            className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}] shadow-sm`}
+          >
+            <h4 className={`font-serif text-2xl text-[${COLORS.oldLavender}] mb-3`}>
+              Guests
+            </h4>
+            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+              <strong>Gentlemen:</strong> Formal Suit or Barong Tagalog
+            </p>
+            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+              <strong>Ladies:</strong> Formal Dress
+            </p>
+          </div>
+        </div>
+
+        {/* Note */}
+        <p
+          className={`mt-12 text-base md:text-lg text-center italic text-[${COLORS.taupeGray}] border-t border-stone-200 pt-6`}
+        >
+          Kindly avoid wearing white, ivory, or cream — these shades are reserved for the bride.
         </p>
+
+        {/* Visual examples */}
+        <div className="pt-12">
+          <h5
+            className={`text-lg md:text-xl font-medium text-[${COLORS.oldLavender}] text-center mb-8`}
+          >
+            Visual Inspiration
+          </h5>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Gentlemen */}
+            <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
+              <img
+                src="/images/dress1.png" // 🖼️ replace with your image
+                alt="Formal Suit or Barong"
+                className="w-full h-auto object-cover"
+              />
+              <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
+                Formal Suit or Barong Tagalog
+              </div>
+            </div>
+
+            {/* Ladies */}
+            <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
+              <img
+                src="/images/dress2.png" // 🖼️ replace with your image
+                alt="Formal Dress"
+                className="w-full h-auto object-cover"
+              />
+              <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
+                Elegant Formal Dress
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
