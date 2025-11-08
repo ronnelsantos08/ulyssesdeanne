@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useInView } from "react-intersection-observer";
 import { Heart, MapPin, Calendar, Mail, CheckCircle, Menu, X, Clock, Gift, Camera, Compass } from 'lucide-react';
 import { motion } from "framer-motion";
@@ -281,124 +281,152 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
 /**
  * The main cover section (Hero).
  */
-const CoverSection: React.FC = () => (
-  <header
-    id="home"
-    className="relative h-screen flex flex-col items-center justify-center text-white overflow-hidden pt-20"
-  >
-    {/* Background Image */}
-    <div
-      className="absolute inset-0 bg-cover bg-center"
-      style={{
-        backgroundImage: 'url("/images/hero.jpeg")',
-        filter: "brightness(0.5)",
-      }}
+const CoverSection: React.FC = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <header
+      id="home"
+      className="relative h-screen flex flex-col items-center justify-center text-white overflow-hidden pt-20"
     >
+      {/* Background Image */}
       <div
-        className="absolute inset-0"
-        style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
-      ></div>
-    </div>
-
-    {/* Text Carousel */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-      className="z-10"
-    >
-      <TextCarousel />
-    </motion.div>
-
-    {/* Content Box */}
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-      className="relative z-10 text-center p-6 sm:p-8 md:p-12 rounded-xl max-w-xl mx-4"
-      style={{
-        backgroundColor: "rgba(0,0,0,0.4)",
-        border: `2px solid ${COLORS.mountainPink}`,
-      }}
-    >
-      {/* Intro Text */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.1 }}
-        className="text-lg md:text-xl font-serif italic mb-4 tracking-widest"
-        style={{ color: COLORS.almond }}
-      >
-        The wedding celebration of
-      </motion.p>
-
-      {/* Names */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 1.3 }}
-        className="flex flex-wrap justify-center items-center font-serif font-bold mb-4 leading-tight"
-      >
-        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-          {COUPLE_INFO.bride}
-        </span>
-        <span
-          className="mx-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
-          style={{ color: COLORS.mountainPink }}
-        >
-          &amp;
-        </span>
-        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-          {COUPLE_INFO.groom}
-        </span>
-      </motion.h1>
-
-      {/* Date */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.7 }}
-        className="text-xl sm:text-2xl md:text-3xl font-serif border-y py-3 mt-6"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
-          borderColor: "rgba(255,255,255,0.5)",
-          color: COLORS.almond,
+          backgroundImage: 'url("/images/hero.jpeg")',
+          filter: "brightness(0.5)",
         }}
       >
-        {COUPLE_INFO.date}
-      </motion.p>
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+        ></div>
+      </div>
 
-      {/* Venue */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2 }}
-        className="text-lg sm:text-xl mt-4 font-light tracking-wider"
-        style={{ color: COLORS.almond }}
-      >
-        {COUPLE_INFO.venue}
-      </motion.p>
-
-      {/* RSVP Button */}
-      <motion.a
-        href="#rsvp"
+      {/* Text Carousel */}
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 2.3 }}
-        style={{
-          borderColor: COLORS.mountainPink,
-          color: COLORS.almond,
-        }}
-        className="mt-8 inline-flex items-center px-8 py-3 uppercase tracking-widest hover:bg-[#906272] transition duration-300 rounded-full text-sm sm:text-base font-semibold shadow-lg"
+        transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+        className="z-10"
       >
-        RSVP Now{" "}
-        <Heart
-          className="ml-2 w-4 h-4 sm:w-5 sm:h-5"
+        <TextCarousel />
+      </motion.div>
+
+      {/* Content Box */}
+      <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+        className="relative z-10 text-center p-6 sm:p-8 md:p-12 rounded-xl max-w-xl mx-4"
+        style={{
+          backgroundColor: "rgba(0,0,0,0.4)",
+          border: `2px solid ${COLORS.mountainPink}`,
+        }}
+      >
+        {/* Intro Text */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+          className="text-lg md:text-xl font-serif italic mb-4 tracking-widest"
           style={{ color: COLORS.almond }}
-        />
-      </motion.a>
-    </motion.div>
-  </header>
-);
+        >
+          The wedding celebration of
+        </motion.p>
+
+        {/* Names */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.3 }}
+          className="flex flex-wrap justify-center items-center font-serif font-bold mb-4 leading-tight"
+        >
+          <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+            {COUPLE_INFO.bride}
+          </span>
+          <span
+            className="mx-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+            style={{ color: COLORS.mountainPink }}
+          >
+            &amp;
+          </span>
+          <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+            {COUPLE_INFO.groom}
+          </span>
+        </motion.h1>
+
+        {/* Date */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.7 }}
+          className="text-xl sm:text-2xl md:text-3xl font-serif border-y py-3 mt-6"
+          style={{
+            borderColor: "rgba(255,255,255,0.5)",
+            color: COLORS.almond,
+          }}
+        >
+          {COUPLE_INFO.date}
+        </motion.p>
+
+        {/* Venue */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2 }}
+          className="text-lg sm:text-xl mt-4 font-light tracking-wider"
+          style={{ color: COLORS.almond }}
+        >
+          {COUPLE_INFO.venue}
+        </motion.p>
+
+        {/* RSVP Button */}
+        <motion.a
+          href="#rsvp"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 2.3 }}
+          style={{
+            borderColor: COLORS.mountainPink,
+            color: COLORS.almond,
+          }}
+          className="mt-8 inline-flex items-center px-8 py-3 uppercase tracking-widest hover:bg-[#906272] transition duration-300 rounded-full text-sm sm:text-base font-semibold shadow-lg"
+        >
+          RSVP Now{" "}
+          <Heart
+            className="ml-2 w-4 h-4 sm:w-5 sm:h-5"
+            style={{ color: COLORS.almond }}
+          />
+        </motion.a>
+
+        {/* Music Player Toggle */}
+        <button
+          onClick={toggleMusic}
+          className="mt-6 px-4 py-2 rounded-full bg-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.4)] transition duration-300"
+        >
+          {isPlaying ? "Pause Music" : "Play Music"}
+        </button>
+
+        {/* Hidden Audio */}
+        <audio ref={audioRef} loop src="audio1.mp3" />
+      </motion.div>
+    </header>
+  );
+};
+
 
 
 
@@ -528,57 +556,7 @@ const InviteSection: React.FC = () => {
 /**
  * Component to simulate stacked photo album pages.
  */
-const BookOfMemories: React.FC = () => {
-  const pages = [
-    { key: 1, image: 'images/ourstory5.jpeg', label: "Our First Date", rotation: '-rotate-3', translate: '-translate-x-4', textColor: '#F5F5F5' },
-    { key: 2, image: 'images/ourstory2.jpeg', label: "The Proposal", rotation: 'rotate-1', translate: 'translate-x-2', textColor: '#F5F5F5' },
-    { key: 3, image: 'images/ourstory3.jpeg', label: "Travels", rotation: '-rotate-2', translate: '-translate-x-1', textColor: '#F5F5F5' },
-    { key: 4, image: 'images/ourstory4.jpeg', label: "Adventures", rotation: 'rotate-3', translate: 'translate-x-4', textColor: '#F5F5F5' },
-    { key: 5, image: 'images/ourstory1.jpeg', label: "Our Family", rotation: 'rotate-1', translate: '-translate-x-2', textColor: '#F5F5F5' },
-  ];
 
-  const [topIndex, setTopIndex] = useState(pages.length - 1);
-
-  const handleClick = () => {
-    setTopIndex((prev) => (prev - 1 + pages.length) % pages.length);
-  };
-
-  const baseStyle =
-    "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out hover:shadow-2xl cursor-pointer";
-
-  // Intersection Observer for in-view effect
-  const [ref, isInView] = useInView({ triggerOnce: true, rootMargin: "-100px" });
-
-  return (
-    <div ref={ref} className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
-      {pages.map((page, index) => {
-        const zIndex = (index - topIndex + pages.length) % pages.length;
-
-        return (
-          <motion.div
-            key={page.key}
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
-            className={`${baseStyle} ${page.rotation} ${page.translate} flex items-center justify-center text-center font-serif italic`}
-            style={{
-              backgroundImage: `url(${page.image})`,
-              color: page.textColor,
-              zIndex: pages.length - zIndex,
-              top: `${zIndex * 5}px`,
-              left: 0,
-            }}
-            onClick={handleClick}
-          >
-            <div className="bg-black/30 px-2 py-1 rounded">
-              <span className="text-sm uppercase tracking-wider">{page.label}</span>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-};
 
 
 /**
@@ -605,7 +583,7 @@ const PreludeSection: React.FC = () => (
       <div className="grid lg:grid-cols-12 gap-12 items-center">
         {/* LEFT COLUMN: Book/Image Fanning Effect (Col Span 5) */}
         <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
-          <BookOfMemories />
+       
         </div>
 
         {/* RIGHT COLUMN: Story Text (Col Span 7) */}
