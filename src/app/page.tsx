@@ -13,7 +13,7 @@ const COUPLE_INFO = {
   time: "2:30 PM", 
   venue: "Maria Paz Royale Garden", 
   address: "Brgy. Sta Filomena, San Pablo City", 
-  rsvpDeadline: "September 15, 2025",
+  rsvpDeadline: "December 15, 2026",
   dressCode: "Formal Attire (Black tie optional)",
   weddingDate: new Date("January 10, 2026 14:30:00").getTime(), 
   
@@ -619,7 +619,7 @@ const CountdownSection: React.FC = () => {
  */
 
 const GOOGLE_FORM_ACTION_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdzaZbswV9GI_XzfylJ6kmdO_BIYwKwpW3CHFpQ9rm4n5itUg/formResponse';
+  'https://docs.google.com/forms/d/e/1FAIpQLSfjfVE-fCDLV_G5Bk9efYhcYk2-lJ78kPphtuel3CvpQENBYQ/formResponse';
 
 const RsvpSection: React.FC = () => {
   const [name, setName] = useState('');
@@ -656,11 +656,11 @@ const RsvpSection: React.FC = () => {
     setIsSubmitting(true);
 
     const formData = new FormData();
-    formData.append('entry.1127358935', name);           // Full Name
-    formData.append('entry.1824607770', mobile);         // Mobile Number
-    formData.append('entry.766160335', isAttending ? 'Yes' : 'No'); // Attending
-    formData.append('entry.1059071237', guests.toString());         // Guests
-    formData.append('entry.1669598374', message);        // Message
+    formData.append('entry.322689216', name);              // Full Name
+    formData.append('entry.1326557165', mobile);           // Mobile Number
+    formData.append('entry.1799369054', isAttending ? 'Yes' : 'No'); // Attending?
+    formData.append('entry.1949303104', guests.toString());          // No. of Guests
+    formData.append('entry.1613417117', message);           // Message
 
     try {
       await fetch(GOOGLE_FORM_ACTION_URL, {
@@ -687,39 +687,39 @@ const RsvpSection: React.FC = () => {
     <section
       id="rsvp"
       className="py-20 text-stone-900"
-      style={{ backgroundColor: '#F5F0E6' }} // Almond
+      style={{ backgroundColor: '#F5F0E6' }}
     >
       <div className="container mx-auto px-6 max-w-xl">
         <h2
           className="text-4xl font-serif text-center mb-4 border-b-2 pb-2 inline-block"
           style={{
-            color: '#796878', // Old Lavender
-            borderColor: 'rgba(216, 140, 161, 0.5)', // Mountain Pink /50
+            color: '#796878',
+            borderColor: 'rgba(216, 140, 161, 0.5)',
           }}
         >
           Kindly RSVP
         </h2>
         <p
           className="text-center text-lg mb-8"
-          style={{ color: '#8B8589' }} // Taupe Gray
+          style={{ color: '#8B8589' }}
         >
           Please confirm your attendance by{' '}
-          <span style={{ fontWeight: 600, color: '#D88CA1' }}>{COUPLE_INFO.rsvpDeadline}</span>
+          <span style={{ fontWeight: 600, color: '#D88CA1' }}>
+            {COUPLE_INFO.rsvpDeadline}
+          </span>
           .
         </p>
 
         {isSubmitted ? (
           <div
             className="text-center p-10 rounded-xl shadow-lg"
-            style={{ backgroundColor: '#ECFDF5', border: '4px solid #BBF7D0' }} // Light green
+            style={{ backgroundColor: '#ECFDF5', border: '4px solid #BBF7D0' }}
           >
             <CheckCircle className="w-12 h-12 mx-auto mb-4" style={{ color: '#16A34A' }} />
             <h3 className="text-2xl font-serif" style={{ color: '#15803D' }}>
               Thank You!
             </h3>
-            <p className="text-lg mt-2">
-              Your RSVP has been recorded. We can't wait to see you!
-            </p>
+            <p className="text-lg mt-2">Your RSVP has been recorded. We can't wait to see you!</p>
           </div>
         ) : (
           <form
@@ -729,11 +729,7 @@ const RsvpSection: React.FC = () => {
           >
             {/* Name */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium mb-1"
-                style={{ color: '#8B8589' }}
-              >
+              <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: '#8B8589' }}>
                 Full Name
               </label>
               <input
@@ -742,22 +738,15 @@ const RsvpSection: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={isSubmitting}
-                placeholder="John & Jane Doe"
+                placeholder="Jane Doe"
                 className="w-full px-4 py-2 rounded-lg transition duration-150"
-                style={{
-                  border: '1px solid #D1D5DB',
-                  outlineColor: '#D88CA1',
-                }}
+                style={{ border: '1px solid #D1D5DB', outlineColor: '#D88CA1' }}
               />
             </div>
 
             {/* Mobile */}
             <div>
-              <label
-                htmlFor="mobile"
-                className="block text-sm font-medium mb-1"
-                style={{ color: '#8B8589' }}
-              >
+              <label htmlFor="mobile" className="block text-sm font-medium mb-1" style={{ color: '#8B8589' }}>
                 Mobile Number
               </label>
               <input
@@ -768,10 +757,7 @@ const RsvpSection: React.FC = () => {
                 disabled={isSubmitting}
                 placeholder="09123456789"
                 className="w-full px-4 py-2 rounded-lg transition duration-150"
-                style={{
-                  border: '1px solid #D1D5DB',
-                  outlineColor: '#D88CA1',
-                }}
+                style={{ border: '1px solid #D1D5DB', outlineColor: '#D88CA1' }}
               />
             </div>
 
@@ -813,17 +799,13 @@ const RsvpSection: React.FC = () => {
             {/* Guests */}
             {isAttending && (
               <div>
-                <label
-                  htmlFor="guests"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: '#8B8589' }}
-                >
+                <label htmlFor="guests" className="block text-sm font-medium mb-1" style={{ color: '#8B8589' }}>
                   Number of Guests (Including you)
                 </label>
                 <select
                   id="guests"
                   value={guests}
-                  onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) => setGuests(parseInt(e.target.value))}
                   disabled={isSubmitting}
                   className="w-full px-4 py-2 rounded-lg transition duration-150"
                   style={{
@@ -839,11 +821,7 @@ const RsvpSection: React.FC = () => {
 
             {/* Message */}
             <div>
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium mb-1"
-                style={{ color: '#8B8589' }}
-              >
+              <label htmlFor="message" className="block text-sm font-medium mb-1" style={{ color: '#8B8589' }}>
                 Message (Optional)
               </label>
               <textarea
@@ -854,27 +832,18 @@ const RsvpSection: React.FC = () => {
                 placeholder="Any special requests or messages?"
                 rows={3}
                 className="w-full px-4 py-2 rounded-lg transition duration-150"
-                style={{
-                  border: '1px solid #D1D5DB',
-                  outlineColor: '#D88CA1',
-                }}
+                style={{ border: '1px solid #D1D5DB', outlineColor: '#D88CA1' }}
               />
             </div>
 
-            {error && (
-              <p className="text-red-500 text-sm font-medium text-center">{error}</p>
-            )}
+            {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
 
             {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full flex items-center justify-center py-3 px-4 rounded-lg shadow-sm text-lg font-medium transition duration-300"
-              style={{
-                backgroundColor: '#D88CA1',
-                color: 'white',
-                border: 'none',
-              }}
+              style={{ backgroundColor: '#D88CA1', color: 'white' }}
             >
               {isSubmitting ? (
                 <>
@@ -884,18 +853,12 @@ const RsvpSection: React.FC = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                   >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 
+                      3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
                   Sending...
@@ -1035,13 +998,18 @@ const PrenupSection: React.FC = () => {
 
           {/* Content */}
           <div className="relative z-10">
-            <Gift className="w-30 h-50 mx-auto mb-4 text-[#D88CA1]" />
+          
             <h3 className="text-3xl font-semibold font-serif mb-4" style={{ color: '#F5F5F5' }}>
               Your Presence is Our Present
             </h3>
             <p className="mt-4 text-lg leading-relaxed" style={{ color: '#F5F5F5' }}>
             Your presence at our wedding is the greatest gift we could ask for, and we truly look forward to celebrating this special day with you. For those who wish to honor us with a gift, we have created a monetary gift registry to help us start this new chapter together. Your thoughtful gifts will be deeply appreciated, but please know that having you there to share in our joy means the most to us.
             </p>
+            <img 
+            src="/images/gift.png" // replace with your actual PNG path
+            alt="Gift"
+            className="w-40 h-auto mx-auto mb-4"
+          />
           </div>
         </div>
       </div>
@@ -1063,8 +1031,8 @@ const LocationSection: React.FC = () => {
   const receptionArea = "Sampaguita Hall";
   const baseAddress = `${COUPLE_INFO.venue}, ${COUPLE_INFO.address}`;
 
-  const ceremonyMapUrl = `https://maps.google.com/?q=${encodeURIComponent(baseAddress + ", " + ceremonyArea)}`;
-  const receptionMapUrl = `https://maps.google.com/?q=${encodeURIComponent(baseAddress + ", " + receptionArea)}`;
+  const ceremonyMapUrl = 'https://maps.app.goo.gl/HE8VS1QkWprSY8zE8';
+  const receptionMapUrl = 'https://maps.app.goo.gl/HE8VS1QkWprSY8zE8';
 
   type IconComponent = typeof MapPin | typeof Compass;
 
@@ -1180,7 +1148,7 @@ const LocationSection: React.FC = () => {
         <div className="grid lg:grid-cols-12 gap-8 items-center mb-20">
           <div className="lg:col-span-5 order-1">
             <ImageBlock
-              src="https://images.unsplash.com/photo-1546949987-6e6b01b6062f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
+              src="images/ceremony.jpg"
               alt="Outdoor Ceremony Setup"
             />
           </div>
@@ -1190,7 +1158,8 @@ const LocationSection: React.FC = () => {
               title="The Ceremony"
               time="2:30 PM"
               area={ceremonyArea}
-              description="Join us as we exchange vows in the beautiful Jardin de Corazon. Please arrive at least 15–20 minutes early for seating."
+              description="MARIA PAZ ROYALE GARDEN, JARDIN DE CORAZON.
+              BRGY. STA FILOMENA, SAN PABLO CITY (CLICK/SCAN TO OPEN IN GOOGLE MAPS).. Join us as we exchange vows in the beautiful Jardin de Corazon. Please arrive at least 15–20 minutes early for seating."
               isLeft={false}
               mapUrl={ceremonyMapUrl}
               MapIconComponent={MapPin}
@@ -1205,7 +1174,8 @@ const LocationSection: React.FC = () => {
               title="The Reception"
               time="6:00 PM"
               area={receptionArea}
-              description="Celebrate with dinner, drinks, and dancing immediately following the ceremony in the elegant Sampaguita Hall. Let the party begin!"
+              description="MARIA PAZ ROYALE GARDEN, SAMPAGUITA HALL. 
+              BRGY. STA FILOMENA, SAN PABLO CITY (CLICK/SCAN TO OPEN IN GOOGLE MAPS). Celebrate with dinner, drinks, and dancing immediately following the ceremony in the elegant Sampaguita Hall. Let the party begin!"
               isLeft={true}
               mapUrl={receptionMapUrl}
               MapIconComponent={Compass}
@@ -1214,7 +1184,7 @@ const LocationSection: React.FC = () => {
 
           <div className="lg:col-span-5 order-1 lg:order-2">
             <ImageBlock
-              src="https://images.unsplash.com/photo-1577764724778-9e52516d00e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
+              src="images/sampaguitahall.jpg"
               alt="Indoor Reception Hall"
             />
           </div>
@@ -1603,27 +1573,30 @@ const App: React.FC = () => {
  * Footer/Contact Information Section.
  */
 const FooterSection: React.FC = () => (
-  // Background: Taupe Gray
-  <footer className={`bg-[${COLORS.taupeGray}] text-[${COLORS.almond}] py-10`}>
+  <footer
+    style={{ backgroundColor: COLORS.taupeGray, color: COLORS.almond }}
+    className="py-10"
+  >
     <div className="container mx-auto px-6 text-center">
       <p className="text-lg font-serif mb-4">
         We can't wait to share our big day with you!
       </p>
       <div className="flex justify-center space-x-6 text-sm">
         <div className="flex items-center">
-          <Calendar className={`w-4 h-4 mr-2 text-[${COLORS.mountainPink}]`} />
+          <Calendar className="w-4 h-4 mr-2" style={{ color: COLORS.mountainPink }} />
           <span>Save the Date: {COUPLE_INFO.date}</span>
         </div>
         <div className="flex items-center">
-          <Mail className={`w-4 h-4 mr-2 text-[${COLORS.mountainPink}]`} />
+          <Mail className="w-4 h-4 mr-2" style={{ color: COLORS.mountainPink }} />
           <span>Contact: hello@ulyssesanddeanne.com</span>
         </div>
       </div>
-      <p className={`mt-8 text-xs text-[${COLORS.silverPink}]`}>
+      <p className="mt-8 text-xs" style={{ color: COLORS.silverPink }}>
         &copy; {new Date().getFullYear()} Ulysses & Deanne. All rights reserved.
       </p>
     </div>
   </footer>
 );
+
 
 export default App;
