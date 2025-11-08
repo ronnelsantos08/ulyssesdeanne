@@ -12,7 +12,7 @@ const COUPLE_INFO = {
   time: "4:00 PM",
   venue: "Willow Creek Estate",
   address: "123 Grand Ave, Beverly Hills, CA 90210",
-  rsvpDeadline: "September 15, 2025",
+  rsvpDeadline: "December 10, 2026",
   dressCode: "Formal Attire (Black tie optional)",
   weddingDate: new Date("January 10, 2026 16:00:00").getTime(), 
 };
@@ -296,74 +296,149 @@ const CoverSection: React.FC = () => (
 /**
  * NEW SECTION: Invitation Text (Inserted after CoverSection)
  */
-const InviteSection: React.FC = () => (
-  <section id="invite" className="py-16 md:py-20" style={{ backgroundColor: COLORS.silverPink, color: '#1f2937' }}>
-    <div className="container mx-auto px-6 max-w-4xl text-center">
-      <h2 className="font-serif text-4xl md:text-5xl mb-8" style={{ color: COLORS.oldLavender }}>
-        We Invite You
-      </h2>
-      <div className="max-w-3xl mx-auto">
-        <p className="text-xl md:text-2xl italic leading-relaxed font-light" style={{ color: COLORS.taupeGray }}>
+const InviteSection: React.FC = () => {
+  const bgImageUrl = 'images/invitebg.jpg'; // Background image
+  const decorationUrl = 'images/invitering.png';  // Decoration image
+
+  return (
+    <section
+      id="invite"
+      className="py-24 md:py-32 relative flex justify-center items-center"
+      style={{
+        background: 'linear-gradient(135deg, #796878 0%, #A798AB 100%)', // Old Lavender gradient
+      }}
+    >
+      {/* Floating Card */}
+      <div
+        className="relative z-10 max-w-4xl mx-6 md:mx-0 p-10 md:p-16 rounded-3xl shadow-2xl text-center"
+        style={{
+          backgroundImage: `url(${bgImageUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          color: '#1f2937',
+        }}
+      >
+        <h2
+          className="font-serif text-4xl md:text-5xl mb-6 md:mb-10"
+          style={{ color: '#A0522D' }} // Old Lavender text variant
+        >
+          We Invite You
+        </h2>
+
+        <p
+          className="text-xl md:text-2xl italic leading-relaxed font-light max-w-3xl mx-auto"
+          style={{ color: '#826770' }} // Light text
+        >
           Our paths crossed by chance, but our hearts chose each other with purpose.
           Now, we're ready to celebrate a love that's grown deep and true.
           Please join us on January 10, 2026 as we begin our next chapter, surrounded by the warmth of your presence.
         </p>
-      </div>
-      <p className="mt-10 text-lg font-serif font-semibold" style={{ color: COLORS.mountainPink }}>
-        Deanne & Ulysses
-        <br />
-        <span className="text-sm uppercase tracking-wider" style={{ color: '#6b7280' }}>The Beginning of Forever</span>
-      </p>
-    </div>
-  </section>
-);
 
+        <p
+          className="mt-10 text-lg md:text-xl font-serif font-semibold"
+          style={{ color: '#D88CA1' }} // Mountain Pink
+        >
+          Deanne & Ulysses
+          <br />
+          <span
+            className="text-sm uppercase tracking-wider"
+            style={{ color: '#6B7280' }}
+          >
+            The Beginning of Forever
+          </span>
+        </p>
+
+        {/* Decoration Image */}
+        <img
+          src={decorationUrl}
+          alt="Decoration"
+          className="absolute bottom-[-20px] right-[-20px] w-24 md:w-32 pointer-events-none bounce"
+          onError={(e) => {
+            e.currentTarget.src = "https://placehold.co/150x150/FFD1DC/6d28d9?text=Deco";
+            e.currentTarget.onerror = null;
+          }}
+        />
+      </div>
+
+      {/* Optional Overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.05))',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Bouncing animation CSS */}
+      <style>
+        {`
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+          }
+          .bounce {
+            animation: bounce 2s infinite ease-in-out;
+          }
+        `}
+      </style>
+    </section>
+  );
+};
 
 
 /**
  * Component to simulate stacked photo album pages.
  */
 const BookOfMemories: React.FC = () => {
-    // NEW THEME: Pages array now uses all colors
-    const pages = [
-        { key: 1, bg: COLORS.silverPink, text: COLORS.oldLavender, rotation: '-rotate-3', translate: '-translate-x-4', label: "Our First Date" },
-        { key: 2, bg: COLORS.almond, text: COLORS.oldLavender, rotation: 'rotate-1', translate: 'translate-x-2', label: "The Proposal" },
-        // Dark card, light text
-        { key: 3, bg: COLORS.mountainPink, text: COLORS.almond, rotation: '-rotate-2', translate: '-translate-x-1', label: "Travels" }, 
-        // Dark card, light text
-        { key: 4, bg: COLORS.oldLavender, text: COLORS.almond, rotation: 'rotate-3', translate: 'translate-x-4', label: "Adventures" }, 
-        { key: 5, bg: COLORS.almond, text: COLORS.oldLavender, rotation: 'rotate-1', translate: '-translate-x-2', label: "Our Family" },
-    ];
-    
-    const baseStyle = "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out hover:shadow-2xl";
+  const pages = [
+    { key: 1, image: 'images/ourstory5.jpeg', label: "Our First Date", rotation: '-rotate-3', translate: '-translate-x-4', textColor: '#F5F5F5' },
+    { key: 2, image: 'images/ourstory2.jpeg', label: "The Proposal", rotation: 'rotate-1', translate: 'translate-x-2', textColor: '#F5F5F5' },
+    { key: 3, image: 'images/ourstory3.jpeg', label: "Travels", rotation: '-rotate-2', translate: '-translate-x-1', textColor: '#F5F5F5' },
+    { key: 4, image: 'images/ourstory4.jpeg', label: "Adventures", rotation: 'rotate-3', translate: 'translate-x-4', textColor: '#F5F5F5' },
+    { key: 5, image: 'images/ourstory1.jpeg', label: "Our Family", rotation: 'rotate-1', translate: '-translate-x-2', textColor: '#F5F5F5' },
+  ];
 
-    return (
-        <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
-            <div className="relative w-full h-full">
-                {pages.map((page, index) => (
-                    <div
-                        key={page.key}
-                        className={`${baseStyle} ${page.rotation} ${page.translate} 
-                                    flex items-center justify-center text-center 
-                                    font-serif italic`}
-                        style={{ 
-                            backgroundColor: page.bg,
-                            color: page.text,
-                            zIndex: 5 - index, 
-                            top: `${index * 5}px`, 
-                            left: 0,
-                        }}
-                    >
-                        {/* Icon color matches text color */}
-                        <Camera className={`w-8 h-8 mr-2`} style={{ color: page.text === COLORS.oldLavender ? COLORS.mountainPink : page.text }} />
-                        <span className="text-sm uppercase tracking-wider">{page.label}</span>
-                    </div>
-                ))}
+  const [topIndex, setTopIndex] = useState(pages.length - 1);
+
+  const handleClick = () => {
+    // Move current top page to the bottom
+    setTopIndex((prev) => (prev - 1 + pages.length) % pages.length);
+  };
+
+  const baseStyle =
+    "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out hover:shadow-2xl cursor-pointer";
+
+  return (
+    <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
+      <div className="relative w-full h-full" onClick={handleClick}>
+        {pages.map((page, index) => {
+          // Calculate zIndex relative to topIndex
+          const zIndex = (index - topIndex + pages.length) % pages.length;
+
+          return (
+            <div
+              key={page.key}
+              className={`${baseStyle} ${page.rotation} ${page.translate} flex items-center justify-center text-center font-serif italic`}
+              style={{
+                backgroundImage: `url(${page.image})`,
+                color: page.textColor,
+                zIndex: pages.length - zIndex, // top page has highest zIndex
+                top: `${zIndex * 5}px`,
+                left: 0,
+              }}
+            >
+              <div className="bg-black/30 px-2 py-1 rounded">
+                <span className="text-sm uppercase tracking-wider">{page.label}</span>
+              </div>
             </div>
-        </div>
-    );
+          );
+        })}
+      </div>
+    </div>
+  );
 };
-
 
 /**
  * Section for the couple's story (Story).
@@ -430,14 +505,14 @@ const CountdownSection: React.FC = () => {
           {/* Old Lavender digits */}
           <div
               className="text-5xl font-sans font-extrabold leading-none"
-              style={{ color: COLORS.oldLavender }}
+              style={{ color: COLORS.silverPink }}
           >
               {String(value).padStart(2, '0')}
           </div>
           {/* Taupe Gray labels */}
           <div
               className="text-sm uppercase tracking-wider mt-1"
-              style={{ color: COLORS.taupeGray }}
+              style={{ color: COLORS.almond }}
           >
               {label}
           </div>
@@ -445,53 +520,56 @@ const CountdownSection: React.FC = () => {
   );
 
   return (
-      <section className="relative py-20 min-h-[300px] overflow-hidden" id="countdown">
-          {/* Background Image */}
-          <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                  backgroundImage:
-                      'url("https://images.unsplash.com/photo-1596280045339-44431ccdb7d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDEzfHxnbG93aW5nJTIwd2VkZGluZyUyMGxpZ2h0c3xlbnwwfHx8fDE3MTkyNjYyMjh8MA&lib=rb-4.0.3&q=80&w=1080")',
-              }}
-          >
-              {/* Dark overlay with Mountain Pink */}
-              <div
-                  className="absolute inset-0"
-                  style={{ backgroundColor: COLORS.mountainPink + 'E6' }} // 90% opacity
-              ></div>
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10 container mx-auto px-6 max-w-4xl text-center">
-              {/* Almond text */}
-              <h3
-                  className="text-3xl font-serif mb-8 flex items-center justify-center"
-                  style={{ color: COLORS.almond }}
-              >
-                  <Clock className="w-6 h-6 mr-3" style={{ color: COLORS.almond }} />
-                  {isPast ? 'We are married!' : 'The day is coming soon...'}
-              </h3>
-
-              {!isPast ? (
-                  <div
-                      className="grid grid-cols-4 gap-4 max-w-md mx-auto bg-white p-6 rounded-xl shadow-xl border-t-4"
-                      style={{ borderColor: COLORS.oldLavender }}
-                  >
-                      <TimeBlock value={timeLeft.days} label="Days" />
-                      <TimeBlock value={timeLeft.hours} label="Hours" />
-                      <TimeBlock value={timeLeft.minutes} label="Mins" />
-                      <TimeBlock value={timeLeft.seconds} label="Secs" />
-                  </div>
-              ) : (
-                  <p
-                      className="text-xl font-serif italic"
-                      style={{ color: COLORS.almond }}
-                  >
-                      Thank you for celebrating with us!
-                  </p>
-              )}
-          </div>
-      </section>
+    <section
+    className="relative py-20 min-h-[600px] overflow-hidden"
+    id="countdown"
+  >
+    {/* Background Image */}
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage: 'url("/images/countdown.jpeg")',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
+    />
+  
+    {/* Optional overlay */}
+    <div
+      className="absolute inset-0"
+      style={{ backgroundColor: COLORS.mountainPink + '66' }} // 40% overlay
+    />
+  
+    {/* Content */}
+    <div className="relative z-10 container mx-auto px-6 max-w-4xl text-center flex flex-col justify-center items-center h-full">
+      <h3
+        className="text-6xl md:text-7xl font-serif mb-12 flex items-center justify-center"
+        style={{ color: COLORS.almond }}
+      >
+        <Clock className="w-8 h-8 mr-3" style={{ color: COLORS.almond }} />
+        {isPast ? 'We are married!' : 'The day is coming soon...'}
+      </h3>
+  
+      {!isPast ? (
+        <div
+          className="grid grid-cols-4 gap-6 max-w-md mx-auto"
+          style={{ borderColor: COLORS.oldLavender }}
+        >
+          <TimeBlock value={timeLeft.days} label="Days" />
+          <TimeBlock value={timeLeft.hours} label="Hours" />
+          <TimeBlock value={timeLeft.minutes} label="Mins" />
+          <TimeBlock value={timeLeft.seconds} label="Secs" />
+        </div>
+      ) : (
+        <p
+          className="text-3xl md:text-4xl font-serif italic mt-10"
+          style={{ color: COLORS.almond }}
+        >
+          Thank you for celebrating with us!
+        </p>
+      )}
+    </div>
+  </section>
   );
 };
 
@@ -499,6 +577,7 @@ const CountdownSection: React.FC = () => {
 /**
  * Section for RSVP form (RSVP).
  */
+
 const GOOGLE_FORM_ACTION_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdzaZbswV9GI_XzfylJ6kmdO_BIYwKwpW3CHFpQ9rm4n5itUg/formResponse';
 
@@ -565,34 +644,55 @@ const RsvpSection: React.FC = () => {
   };
 
   return (
-    <section id="rsvp" className={`py-20 bg-[${COLORS.almond}] text-stone-900`}>
+    <section
+      id="rsvp"
+      className="py-20 text-stone-900"
+      style={{ backgroundColor: '#F5F0E6' }} // Almond
+    >
       <div className="container mx-auto px-6 max-w-xl">
         <h2
-          className={`text-4xl font-serif text-center mb-4 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}
+          className="text-4xl font-serif text-center mb-4 border-b-2 pb-2 inline-block"
+          style={{
+            color: '#796878', // Old Lavender
+            borderColor: 'rgba(216, 140, 161, 0.5)', // Mountain Pink /50
+          }}
         >
           Kindly RSVP
         </h2>
-        <p className={`text-center text-lg mb-8 text-[${COLORS.taupeGray}]`}>
+        <p
+          className="text-center text-lg mb-8"
+          style={{ color: '#8B8589' }} // Taupe Gray
+        >
           Please confirm your attendance by{' '}
-          <span className={`font-semibold text-[${COLORS.mountainPink}]`}>{COUPLE_INFO.rsvpDeadline}</span>.
+          <span style={{ fontWeight: 600, color: '#D88CA1' }}>{COUPLE_INFO.rsvpDeadline}</span>
+          .
         </p>
 
         {isSubmitted ? (
-          <div className="text-center p-10 bg-green-50 border-4 border-green-200 rounded-xl shadow-lg">
-            <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-600" />
-            <h3 className="text-2xl font-serif text-green-700">Thank You!</h3>
-            <p className="text-lg mt-2">Your RSVP has been recorded. We can't wait to see you!</p>
+          <div
+            className="text-center p-10 rounded-xl shadow-lg"
+            style={{ backgroundColor: '#ECFDF5', border: '4px solid #BBF7D0' }} // Light green
+          >
+            <CheckCircle className="w-12 h-12 mx-auto mb-4" style={{ color: '#16A34A' }} />
+            <h3 className="text-2xl font-serif" style={{ color: '#15803D' }}>
+              Thank You!
+            </h3>
+            <p className="text-lg mt-2">
+              Your RSVP has been recorded. We can't wait to see you!
+            </p>
           </div>
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 p-8 border border-stone-200 rounded-xl shadow-2xl bg-white"
+            className="space-y-6 p-8 rounded-xl shadow-2xl"
+            style={{ backgroundColor: 'white', border: '1px solid #D1D5DB' }}
           >
             {/* Name */}
             <div>
               <label
                 htmlFor="name"
-                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+                className="block text-sm font-medium mb-1"
+                style={{ color: '#8B8589' }}
               >
                 Full Name
               </label>
@@ -603,7 +703,11 @@ const RsvpSection: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 disabled={isSubmitting}
                 placeholder="John & Jane Doe"
-                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
+                className="w-full px-4 py-2 rounded-lg transition duration-150"
+                style={{
+                  border: '1px solid #D1D5DB',
+                  outlineColor: '#D88CA1',
+                }}
               />
             </div>
 
@@ -611,7 +715,8 @@ const RsvpSection: React.FC = () => {
             <div>
               <label
                 htmlFor="mobile"
-                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+                className="block text-sm font-medium mb-1"
+                style={{ color: '#8B8589' }}
               >
                 Mobile Number
               </label>
@@ -622,13 +727,17 @@ const RsvpSection: React.FC = () => {
                 onChange={(e) => setMobile(e.target.value)}
                 disabled={isSubmitting}
                 placeholder="09123456789"
-                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
+                className="w-full px-4 py-2 rounded-lg transition duration-150"
+                style={{
+                  border: '1px solid #D1D5DB',
+                  outlineColor: '#D88CA1',
+                }}
               />
             </div>
 
             {/* Attending */}
             <div>
-              <label className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-2`}>
+              <label className="block text-sm font-medium mb-2" style={{ color: '#8B8589' }}>
                 Will you be able to attend?
               </label>
               <div className="flex space-x-4">
@@ -636,11 +745,12 @@ const RsvpSection: React.FC = () => {
                   type="button"
                   onClick={() => setIsAttending(true)}
                   disabled={isSubmitting}
-                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200 ${
-                    isAttending
-                      ? `bg-[${COLORS.mountainPink}] text-white shadow-md`
-                      : `bg-stone-100 text-[${COLORS.taupeGray}] hover:bg-[${COLORS.silverPink}]/50 border border-stone-300`
-                  }`}
+                  className="flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200"
+                  style={{
+                    backgroundColor: isAttending ? '#D88CA1' : '#F3F3F3',
+                    color: isAttending ? 'white' : '#8B8589',
+                    border: isAttending ? 'none' : '1px solid #D1D5DB',
+                  }}
                 >
                   Yes, with pleasure
                 </button>
@@ -648,11 +758,12 @@ const RsvpSection: React.FC = () => {
                   type="button"
                   onClick={() => setIsAttending(false)}
                   disabled={isSubmitting}
-                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200 ${
-                    !isAttending
-                      ? `bg-[${COLORS.taupeGray}] text-white shadow-md`
-                      : `bg-stone-100 text-[${COLORS.taupeGray}] hover:bg-[${COLORS.taupeGray}]/20 border border-stone-300`
-                  }`}
+                  className="flex-1 py-2 px-4 rounded-lg font-semibold transition duration-200"
+                  style={{
+                    backgroundColor: !isAttending ? '#8B8589' : '#F3F3F3',
+                    color: !isAttending ? 'white' : '#8B8589',
+                    border: !isAttending ? 'none' : '1px solid #D1D5DB',
+                  }}
                 >
                   Regretfully, no
                 </button>
@@ -664,7 +775,8 @@ const RsvpSection: React.FC = () => {
               <div>
                 <label
                   htmlFor="guests"
-                  className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+                  className="block text-sm font-medium mb-1"
+                  style={{ color: '#8B8589' }}
                 >
                   Number of Guests (Including you)
                 </label>
@@ -673,7 +785,12 @@ const RsvpSection: React.FC = () => {
                   value={guests}
                   onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
                   disabled={isSubmitting}
-                  className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150 appearance-none bg-white`}
+                  className="w-full px-4 py-2 rounded-lg transition duration-150"
+                  style={{
+                    border: '1px solid #D1D5DB',
+                    outlineColor: '#D88CA1',
+                    backgroundColor: 'white',
+                  }}
                 >
                   {guestOptions}
                 </select>
@@ -684,7 +801,8 @@ const RsvpSection: React.FC = () => {
             <div>
               <label
                 htmlFor="message"
-                className={`block text-sm font-medium text-[${COLORS.taupeGray}] mb-1`}
+                className="block text-sm font-medium mb-1"
+                style={{ color: '#8B8589' }}
               >
                 Message (Optional)
               </label>
@@ -695,17 +813,28 @@ const RsvpSection: React.FC = () => {
                 disabled={isSubmitting}
                 placeholder="Any special requests or messages?"
                 rows={3}
-                className={`w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-[${COLORS.mountainPink}] focus:border-[${COLORS.mountainPink}] transition duration-150`}
+                className="w-full px-4 py-2 rounded-lg transition duration-150"
+                style={{
+                  border: '1px solid #D1D5DB',
+                  outlineColor: '#D88CA1',
+                }}
               />
             </div>
 
-            {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
+            {error && (
+              <p className="text-red-500 text-sm font-medium text-center">{error}</p>
+            )}
 
             {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-[${COLORS.mountainPink}] hover:bg-[${COLORS.oldLavender}] disabled:bg-stone-400 transition duration-300 transform hover:scale-[1.01]`}
+              className="w-full flex items-center justify-center py-3 px-4 rounded-lg shadow-sm text-lg font-medium transition duration-300"
+              style={{
+                backgroundColor: '#D88CA1',
+                color: 'white',
+                border: 'none',
+              }}
             >
               {isSubmitting ? (
                 <>
@@ -743,7 +872,6 @@ const RsvpSection: React.FC = () => {
     </section>
   );
 };
-
 /**
  * Section for Prenup/Registry Information.
  */
