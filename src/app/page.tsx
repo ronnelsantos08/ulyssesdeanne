@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { useInView } from "react-intersection-observer";
 import { Heart, MapPin, Calendar, Mail, CheckCircle, Menu, X, Clock, Gift, Camera, Compass } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Typewriter } from "react-simple-typewriter";
+
 
 
 // --- CONFIGURATION ---
@@ -278,56 +282,121 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
  * The main cover section (Hero).
  */
 const CoverSection: React.FC = () => (
-  <header id="home" className="relative h-screen flex items-center justify-center text-white overflow-hidden pt-20">
+  <header
+    id="home"
+    className="relative h-screen flex flex-col items-center justify-center text-white overflow-hidden pt-20"
+  >
     {/* Background Image */}
-    <div 
+    <div
       className="absolute inset-0 bg-cover bg-center"
-      style={{ 
+      style={{
         backgroundImage: 'url("/images/hero.jpeg")',
-        filter: 'brightness(0.5)'
+        filter: "brightness(0.5)",
       }}
     >
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}></div>
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+      ></div>
     </div>
 
-    <TextCarousel />
+    {/* Text Carousel */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+      className="z-10"
+    >
+      <TextCarousel />
+    </motion.div>
 
     {/* Content Box */}
-    <div className="relative z-10 text-center p-6 sm:p-8 md:p-12 rounded-xl max-w-xl mx-4" style={{
-      backgroundColor: 'rgba(0,0,0,0.4)',
-      border: `2px solid ${COLORS.mountainPink}`,
-    }}>
-      <p className="text-lg md:text-xl font-serif italic mb-4 tracking-widest" style={{ color: COLORS.almond }}>
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+      className="relative z-10 text-center p-6 sm:p-8 md:p-12 rounded-xl max-w-xl mx-4"
+      style={{
+        backgroundColor: "rgba(0,0,0,0.4)",
+        border: `2px solid ${COLORS.mountainPink}`,
+      }}
+    >
+      {/* Intro Text */}
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.1 }}
+        className="text-lg md:text-xl font-serif italic mb-4 tracking-widest"
+        style={{ color: COLORS.almond }}
+      >
         The wedding celebration of
-      </p>
+      </motion.p>
 
       {/* Names */}
-      <h1 className="flex flex-wrap justify-center items-center font-serif font-bold mb-4 leading-tight">
-        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">{COUPLE_INFO.bride}</span>
-        <span className="mx-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ color: COLORS.mountainPink }}> &amp; </span>
-        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">{COUPLE_INFO.groom}</span>
-      </h1>
+      <motion.h1
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.3 }}
+        className="flex flex-wrap justify-center items-center font-serif font-bold mb-4 leading-tight"
+      >
+        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+          {COUPLE_INFO.bride}
+        </span>
+        <span
+          className="mx-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+          style={{ color: COLORS.mountainPink }}
+        >
+          &amp;
+        </span>
+        <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+          {COUPLE_INFO.groom}
+        </span>
+      </motion.h1>
 
-      <p className="text-xl sm:text-2xl md:text-3xl font-serif border-y py-3 mt-6" style={{ borderColor: 'rgba(255,255,255,0.5)', color: COLORS.almond }}>
+      {/* Date */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.7 }}
+        className="text-xl sm:text-2xl md:text-3xl font-serif border-y py-3 mt-6"
+        style={{
+          borderColor: "rgba(255,255,255,0.5)",
+          color: COLORS.almond,
+        }}
+      >
         {COUPLE_INFO.date}
-      </p>
+      </motion.p>
 
-      <p className="text-lg sm:text-xl mt-4 font-light tracking-wider" style={{ color: COLORS.almond }}>
+      {/* Venue */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 2 }}
+        className="text-lg sm:text-xl mt-4 font-light tracking-wider"
+        style={{ color: COLORS.almond }}
+      >
         {COUPLE_INFO.venue}
-      </p>
+      </motion.p>
 
       {/* RSVP Button */}
-      <a 
+      <motion.a
         href="#rsvp"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 2.3 }}
         style={{
           borderColor: COLORS.mountainPink,
           color: COLORS.almond,
         }}
         className="mt-8 inline-flex items-center px-8 py-3 uppercase tracking-widest hover:bg-[#906272] transition duration-300 rounded-full text-sm sm:text-base font-semibold shadow-lg"
       >
-        RSVP Now <Heart className="ml-2 w-4 h-4 sm:w-5 sm:h-5" style={{ color: COLORS.almond }} />
-      </a>
-    </div>
+        RSVP Now{" "}
+        <Heart
+          className="ml-2 w-4 h-4 sm:w-5 sm:h-5"
+          style={{ color: COLORS.almond }}
+        />
+      </motion.a>
+    </motion.div>
   </header>
 );
 
@@ -337,77 +406,103 @@ const CoverSection: React.FC = () => (
  * NEW SECTION: Invitation Text (Inserted after CoverSection)
  */
 const InviteSection: React.FC = () => {
-  const bgImageUrl = 'images/invitebg.jpg'; // Background image
-  const decorationUrl = 'images/invitering.png';  // Decoration image
+  // Correct useInView
+  const [ref, isInView] = useInView({
+    triggerOnce: true, // animate only once
+    rootMargin: "-100px", // offset
+  });
+
+  const bgImageUrl = "images/invitebg.jpg";
+  const decorationUrl = "images/invitering.png";
 
   return (
     <section
       id="invite"
       className="py-24 md:py-32 relative flex justify-center items-center"
       style={{
-        background: 'linear-gradient(135deg, #796878 0%, #A798AB 100%)', // Old Lavender gradient
+        background: "linear-gradient(135deg, #796878 0%, #A798AB 100%)",
       }}
     >
       {/* Floating Card */}
-      <div
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 80, scale: 0.95 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{ duration: 1.2, ease: "easeOut" }}
         className="relative z-10 max-w-4xl mx-6 md:mx-0 p-10 md:p-16 rounded-3xl shadow-2xl text-center"
         style={{
           backgroundImage: `url(${bgImageUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: '#1f2937',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          color: "#1f2937",
         }}
       >
-        <h2
+        {/* Title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.2 }}
           className="font-serif text-4xl md:text-5xl mb-6 md:mb-10"
-          style={{ color: '#A0522D' }} // Old Lavender text variant
+          style={{ color: "#A0522D" }}
         >
           We Invite You
-        </h2>
+        </motion.h2>
 
-        <p
+        {/* Paragraph */}
+        <motion.p
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.5 }}
           className="text-xl md:text-2xl italic leading-relaxed font-light max-w-3xl mx-auto"
-          style={{ color: '#826770' }} // Light text
+          style={{ color: "#826770" }}
         >
           Our paths crossed by chance, but our hearts chose each other with purpose.
           Now, we're ready to celebrate a love that's grown deep and true.
           Please join us on January 10, 2026 as we begin our next chapter, surrounded by the warmth of your presence.
-        </p>
+        </motion.p>
 
-        <p
+        {/* Couple Names */}
+        <motion.p
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.8 }}
           className="mt-10 text-lg md:text-xl font-serif font-semibold"
-          style={{ color: '#D88CA1' }} // Mountain Pink
+          style={{ color: "#D88CA1" }}
         >
           Deanne & Ulysses
           <br />
           <span
             className="text-sm uppercase tracking-wider"
-            style={{ color: '#6B7280' }}
+            style={{ color: "#6B7280" }}
           >
             The Beginning of Forever
           </span>
-        </p>
+        </motion.p>
 
         {/* Decoration Image */}
-        <img
+        <motion.img
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 1.1 }}
           src={decorationUrl}
           alt="Decoration"
           className="absolute -bottom-10 -right-5 xl:-bottom-25 xl:-right-25 md:-bottom-25 md:-right-1 w-[100px] md:w-[200px] sm:w-[100px] pointer-events-none bounce"
-
           onError={(e) => {
-            e.currentTarget.src = "https://placehold.co/150x150/FFD1DC/6d28d9?text=Deco";
+            e.currentTarget.src =
+              "https://placehold.co/150x150/FFD1DC/6d28d9?text=Deco";
             e.currentTarget.onerror = null;
           }}
         />
-      </div>
+      </motion.div>
 
       {/* Optional Overlay */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.05))',
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.05))",
           zIndex: 0,
         }}
       />
@@ -429,6 +524,7 @@ const InviteSection: React.FC = () => {
 };
 
 
+
 /**
  * Component to simulate stacked photo album pages.
  */
@@ -444,42 +540,46 @@ const BookOfMemories: React.FC = () => {
   const [topIndex, setTopIndex] = useState(pages.length - 1);
 
   const handleClick = () => {
-    // Move current top page to the bottom
     setTopIndex((prev) => (prev - 1 + pages.length) % pages.length);
   };
 
   const baseStyle =
     "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out hover:shadow-2xl cursor-pointer";
 
-  return (
-    <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
-      <div className="relative w-full h-full" onClick={handleClick}>
-        {pages.map((page, index) => {
-          // Calculate zIndex relative to topIndex
-          const zIndex = (index - topIndex + pages.length) % pages.length;
+  // Intersection Observer for in-view effect
+  const [ref, isInView] = useInView({ triggerOnce: true, rootMargin: "-100px" });
 
-          return (
-            <div
-              key={page.key}
-              className={`${baseStyle} ${page.rotation} ${page.translate} flex items-center justify-center text-center font-serif italic`}
-              style={{
-                backgroundImage: `url(${page.image})`,
-                color: page.textColor,
-                zIndex: pages.length - zIndex, // top page has highest zIndex
-                top: `${zIndex * 5}px`,
-                left: 0,
-              }}
-            >
-              <div className="bg-black/30 px-2 py-1 rounded">
-                <span className="text-sm uppercase tracking-wider">{page.label}</span>
-              </div>
+  return (
+    <div ref={ref} className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-[400px] perspective-1000 mx-auto">
+      {pages.map((page, index) => {
+        const zIndex = (index - topIndex + pages.length) % pages.length;
+
+        return (
+          <motion.div
+            key={page.key}
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: index * 0.1 }}
+            className={`${baseStyle} ${page.rotation} ${page.translate} flex items-center justify-center text-center font-serif italic`}
+            style={{
+              backgroundImage: `url(${page.image})`,
+              color: page.textColor,
+              zIndex: pages.length - zIndex,
+              top: `${zIndex * 5}px`,
+              left: 0,
+            }}
+            onClick={handleClick}
+          >
+            <div className="bg-black/30 px-2 py-1 rounded">
+              <span className="text-sm uppercase tracking-wider">{page.label}</span>
             </div>
-          );
-        })}
-      </div>
+          </motion.div>
+        );
+      })}
     </div>
   );
 };
+
 
 /**
  * Section for the couple's story (Story).
@@ -510,25 +610,46 @@ const PreludeSection: React.FC = () => (
 
         {/* RIGHT COLUMN: Story Text (Col Span 7) */}
         <div className="lg:col-span-7 text-center lg:text-left order-1 lg:order-2">
-          <p
-            className="text-lg leading-relaxed mb-6"
-            style={{ color: COLORS.taupeGray }}
-          >
-            Our story began in the most unexpected way—with a simple message on Facebook Messenger that changed everything. What started as a friendly chat soon turned into daily conversations filled with laughter, late-night stories, and a spark we couldn't ignore. Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES.
-          </p>
-          <p
-            className="text-lg leading-relaxed mb-8"
-            style={{ color: COLORS.taupeGray }}
-          >
-            After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared.
-          </p>
-          <p
-            className="text-xl font-serif italic"
-            style={{ color: COLORS.oldLavender }}
-          >
-            "Every great love story is beautiful, but ours is my favorite."
-          </p>
-        </div>
+  <p className="text-lg leading-relaxed mb-6" style={{ color: COLORS.taupeGray }}>
+    <Typewriter
+      words={[
+        "Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES."
+      ]}
+      loop={1}
+      cursor
+      cursorStyle="|"
+      typeSpeed={30}
+      deleteSpeed={0}
+      delaySpeed={1000}
+    />
+  </p>
+
+  <p className="text-lg leading-relaxed mb-8" style={{ color: COLORS.taupeGray }}>
+    <Typewriter
+      words={[
+        "After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared."
+      ]}
+      loop={1}
+      cursor
+      cursorStyle="|"
+      typeSpeed={30}
+      deleteSpeed={0}
+      delaySpeed={1000}
+    />
+  </p>
+
+  <p className="text-xl font-serif italic" style={{ color: COLORS.oldLavender }}>
+    <Typewriter
+      words={["\"Every great love story is beautiful, but ours is my favorite.\""]}
+      loop={1}
+      cursor
+      cursorStyle="|"
+      typeSpeed={40}
+      deleteSpeed={0}
+      delaySpeed={1000}
+    />
+  </p>
+</div>
       </div>
     </div>
   </section>
@@ -1508,7 +1629,7 @@ const DressCodeSection: React.FC = () => (
                 className="w-full h-auto object-cover"
               />
               <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
-                Formal Suit or Barong Tagalog
+                Formal Suit
               </div>
             </div>
 
@@ -1532,7 +1653,7 @@ const DressCodeSection: React.FC = () => (
                 className="w-full h-auto object-cover"
               />
               <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
-                Wedding Color Palette Inspiration
+                Wedding Color Palette Inspiration. Barong Tagalog and Filipiniana.
               </div>
             </div>
           </div>
