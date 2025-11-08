@@ -1420,51 +1420,63 @@ const EntourageSection: React.FC = () => (
 const DressCodeSection: React.FC = () => (
   <section
     id="attire"
-    className={`relative py-24 text-stone-900 bg-fixed bg-center bg-cover`}
+    className="relative py-24 text-stone-900 bg-fixed bg-center bg-cover"
     style={{
-      backgroundImage: "url('images/prenup20.jpeg')", // 🖼️ replace with your image path
+      backgroundImage: "url('/images/prenup20.jpeg')", // 🖼️ replace with your image path
     }}
   >
-    {/* Overlay for readability */}
-    <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" aria-hidden="true"></div>
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"
+      aria-hidden="true"
+    ></div>
 
-    <div className="relative container mx-auto px-6 max-w-3xl text-center z-10">
-      {/* Elegant Headline */}
+    <div className="relative container mx-auto px-6 max-w-4xl text-center z-10">
+      {/* Elegant Heading */}
       <h2
-        className={`text-4xl md:text-5xl font-serif tracking-wide mb-10 text-[${COLORS.oldLavender}]`}
+        className="text-4xl md:text-5xl font-serif tracking-wide mb-10"
+        style={{ color: "#796878" }} // Old Lavender
       >
         Attire Guidance
       </h2>
 
       {/* Main Card */}
-      <div className="p-10 md:p-12 bg-white/90 shadow-2xl rounded-2xl border-t-4 border-[${COLORS.mountainPink}]">
+      <div
+        className="p-10 md:p-12 bg-white/90 shadow-2xl rounded-2xl border-t-4"
+        style={{ borderColor: "#D88CA1" }} // Mountain Pink
+      >
+        {/* Attire Info */}
         <div className="space-y-10 text-left">
           {/* Principal Sponsors */}
-          <div
-            className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}] shadow-sm`}
-          >
-            <h4 className={`font-serif text-2xl text-[${COLORS.oldLavender}] mb-3`}>
+          <div className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
+            style={{ borderColor: "#D88CA1" }}>
+            <h4
+              className="font-serif text-2xl mb-3"
+              style={{ color: "#796878" }}
+            >
               Principal Sponsors
             </h4>
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+            <p className="text-lg leading-relaxed" style={{ color: "#8B8589" }}>
               <strong>Gentlemen:</strong> Barong Tagalog
             </p>
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+            <p className="text-lg leading-relaxed" style={{ color: "#8B8589" }}>
               <strong>Ladies:</strong> Filipiniana Dress
             </p>
           </div>
 
           {/* Guests */}
-          <div
-            className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}] shadow-sm`}
-          >
-            <h4 className={`font-serif text-2xl text-[${COLORS.oldLavender}] mb-3`}>
+          <div className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
+            style={{ borderColor: "#D88CA1" }}>
+            <h4
+              className="font-serif text-2xl mb-3"
+              style={{ color: "#796878" }}
+            >
               Guests
             </h4>
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+            <p className="text-lg leading-relaxed" style={{ color: "#8B8589" }}>
               <strong>Gentlemen:</strong> Formal Suit or Barong Tagalog
             </p>
-            <p className={`text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
+            <p className="text-lg leading-relaxed" style={{ color: "#8B8589" }}>
               <strong>Ladies:</strong> Formal Dress
             </p>
           </div>
@@ -1472,24 +1484,26 @@ const DressCodeSection: React.FC = () => (
 
         {/* Note */}
         <p
-          className={`mt-12 text-base md:text-lg text-center italic text-[${COLORS.taupeGray}] border-t border-stone-200 pt-6`}
+          className="mt-12 text-base md:text-lg text-center italic border-t border-stone-200 pt-6"
+          style={{ color: "#8B8589" }}
         >
           Kindly avoid wearing white, ivory, or cream — these shades are reserved for the bride.
         </p>
 
-        {/* Visual examples */}
+        {/* Visual Examples */}
         <div className="pt-12">
           <h5
-            className={`text-lg md:text-xl font-medium text-[${COLORS.oldLavender}] text-center mb-8`}
+            className="text-lg md:text-xl font-medium mb-8"
+            style={{ color: "#796878" }}
           >
             Visual Inspiration
           </h5>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Gentlemen */}
             <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
               <img
-                src="/images/dress1.png" // 🖼️ replace with your image
+                src="/images/dress2.png"
                 alt="Formal Suit or Barong"
                 className="w-full h-auto object-cover"
               />
@@ -1501,12 +1515,24 @@ const DressCodeSection: React.FC = () => (
             {/* Ladies */}
             <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
               <img
-                src="/images/dress2.png" // 🖼️ replace with your image
+                src="/images/dress3.png"
                 alt="Formal Dress"
                 className="w-full h-auto object-cover"
               />
               <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
                 Elegant Formal Dress
+              </div>
+            </div>
+
+            {/* NEW: Color Palette / Theme */}
+            <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
+              <img
+                src="/images/dress1.png" // 🖼️ new image here
+                alt="Wedding Color Theme"
+                className="w-full h-auto object-cover"
+              />
+              <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
+                Wedding Color Palette Inspiration
               </div>
             </div>
           </div>
@@ -1515,6 +1541,7 @@ const DressCodeSection: React.FC = () => (
     </div>
   </section>
 );
+
 
 
 // --- PAGE COMPONENTS ---
