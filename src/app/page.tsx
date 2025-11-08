@@ -1002,21 +1002,32 @@ const PrenupGallerySection: React.FC = () => {
   // Images array (using larger resolution for the main preview)
   const images = Array.from({ length: 34 }, (_, i) => `/images/prenup${i + 1}.jpeg`);
 
-
+  const sectionBgUrl = "/images/prenup10.jpeg";
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const selectedImage = images[selectedIndex];
 
   return (
-      // Background: Silver Pink
-      <section id="gallery" className={`py-20 bg-[${COLORS.silverPink}] text-stone-900`}>
-          <div className="container mx-auto px-6 max-w-4xl">
-              <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>
-                  Our Prenup Gallery
-              </h2>
-              <p className={`text-center text-lg mb-10 text-[${COLORS.taupeGray}] italic max-w-2xl mx-auto`}>
-                  A glimpse into the love, laughter, and light that led us to this moment.
-              </p>
+    <section
+    id="gallery"
+    className="relative py-20 text-stone-900 bg-fixed bg-center bg-cover"
+    style={{ backgroundImage: `url(${sectionBgUrl})` }}
+  >
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-[rgba(251,201,167,0.7)] z-0 pointer-events-none"
+      aria-hidden="true"
+    ></div>
+  
+    {/* Content */}
+    <div className="relative z-10 container mx-auto px-6 max-w-4xl">
+      <h2 className="text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]">
+        Our Prenup Gallery
+      </h2>
+  
+      <p className="text-center text-lg mb-10 text-[${COLORS.taupeGray}] italic max-w-2xl mx-auto">
+        A glimpse into the love, laughter, and light that led us to this moment.
+      </p>
 
               <div className="space-y-4">
                   {/* --- 1. LARGE PREVIEW IMAGE --- */}
@@ -1540,7 +1551,7 @@ const EntourageSection: React.FC = () => (
  */
 const DressCodeSection: React.FC = () => (
   <section
-    id="attire"
+    id= "dresscode"
     className="relative py-24 text-stone-900 bg-fixed bg-center bg-cover"
     style={{
       backgroundImage: "url('/images/prenup20.jpeg')", // 🖼️ replace with your image path
@@ -1548,6 +1559,7 @@ const DressCodeSection: React.FC = () => (
   >
     {/* Overlay */}
     <div
+    id= "dresscode"
       className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"
       aria-hidden="true"
     ></div>
