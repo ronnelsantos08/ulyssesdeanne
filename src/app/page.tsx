@@ -1,22 +1,62 @@
 "use client";
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Heart, MapPin, Calendar, Mail, CheckCircle, Menu, X, Clock, Gift, Camera } from 'lucide-react';
+import { Heart, MapPin, Calendar, Mail, CheckCircle, Menu, X, Clock, Gift, Camera, Compass } from 'lucide-react';
 
 
 // --- CONFIGURATION ---
 const COUPLE_INFO = {
-  bride: "Deanne",
-  groom: "Ulysses",
+  // UPDATED: Full names used for formal sections, shortened names used for hero/visuals
+  bride: "DEANNE", 
+  groom: "ULYSSES", 
   date: "January 10, 2026", 
-  time: "4:00 PM",
-  venue: "Willow Creek Estate",
-  address: "123 Grand Ave, Beverly Hills, CA 90210",
-  rsvpDeadline: "December 10, 2026",
+  time: "2:30 PM", 
+  venue: "Maria Paz Royale Garden", 
+  address: "Brgy. Sta Filomena, San Pablo City", 
+  rsvpDeadline: "September 15, 2025",
   dressCode: "Formal Attire (Black tie optional)",
-  weddingDate: new Date("January 10, 2026 16:00:00").getTime(), 
+  weddingDate: new Date("January 10, 2026 14:30:00").getTime(), 
+  
+  // NEW: Parent Info
+  parentsGroom: {
+    father: "MR. RONALITO LLAMOSO",
+    mother: "MRS. MARIA JO ANN LLAMOSO",
+  },
+  parentsBride: {
+    father: "MR. DENNIS BALAALDIA",
+    mother: "MRS. RACHEL BALAALDIA",
+  },
 };
 
+const ENTOURAGE_DATA = {
+    principalSponsors: {
+        male: [
+            "MR. FERDIE BADULIS", "MR. CARLOS CASTRO", "MR. RODERICK DE GUZMAN",
+            "MR. DARRYL GARCIA", "MR. JEREMY ROSALES", "MR. EUGENE BALAALDIA",
+            "MR. ERWIN ABE", "MR. EMMANUEL NAGASAN", "MR. OMAR DELA PAZ",
+            "MR. ARIEL JALANDOON", "MR. THEODORE BALLESTERO", "MR. RESTITUTO LARGOSA",
+            "MR. BENJAMIN GERVACIO", "MR. ALEX FLAVIER", "MR. ANTHONY TABLICO",
+            "MR. TOPHER LLAMOSO", "MR. MAX GERARD OPEÑA",
+        ],
+        female: [
+            "MRS. MARIA JOSEL VERGARA", "MRS. MARIAN CASTRO", "MRS. LIZBETH DE GUZMAN",
+            "MRS. RACHELLE GARCIA", "MRS. SHERYLL ROSALES", "MRS. MELANIE BALAALDIA",
+            "MRS. REAN ABE", "MRS. NERI NAGASAN", "MRS. ROSETTE DELA PAZ",
+            "MRS. SONIA JALANDOON", "MRS. EUSEBIA CHANGCOCO", "MRS. EVANGELINE BALLESTERO",
+            "MRS. OFELIA PANTALEON", "MRS. ROSALINDA GARCIA", "MRS. LORIELIE DAGLE",
+            "MRS. JULIET ESCOBAR", "MRS. ARMINA OPEÑA",
+        ]
+    },
+    // Best Man and Maids of Honor/Matron of Honor are separated for clean layout
+    bestMan: ["RHON VINCENT LLAMOSO", "JOHN DANIEL LLAMOSO"],
+    maidsOfHonor: ["ANGELA JOYCE ABE", "CHAIZY SALONGA"],
+    matronOfHonor: ["PRINCESS ELAINE ASTILLA"],
+    secondarySponsors: [
+        { role: "Candle", couple: [ "DIANA KEITH LLAMOSO", "RADENN IAN BALAALDIA" ] },
+        { role: "Veil", couple: [ "ROSELYN RANA", "IVER DE GUZMAN" ] },
+        { role: "Cord", couple: [ "FAITH YVONNE BAÑAGALE", "KYLE BALAALDIA" ] },
+    ]
+};
 // Color Palette
 const COLORS = {
   mountainPink: '#906272',
@@ -172,7 +212,7 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
             href="#home"
             onClick={() => handleNavClick('home', '#home')}
             style={{ color: COLORS.almond }}
-            className="text-2xl font-serif font-bold tracking-widest"
+            className="text-xl sm:text-2xl font-serif font-bold tracking-widest"
           >
             {COUPLE_INFO.bride} & {COUPLE_INFO.groom}
           </a>
@@ -872,156 +912,541 @@ const RsvpSection: React.FC = () => {
     </section>
   );
 };
+
+const PrenupGallerySection: React.FC = () => {
+  // Images array (using larger resolution for the main preview)
+  const images = [
+      "https://images.unsplash.com/photo-1517482083377-90c765956799?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDE3fHx3ZWRkaW5nJTIwcHJlbnVwfGVufDB8fHx8MTcyMDczOTc5N3ww&lib=rb-4.0.3&q=80&w=1080", 
+      "https://images.unsplash.com/photo-1627993074852-c8402b851b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDJ8fGNvdXBsZSUyMGxhdWghaW5nJTIwcm9tYW50aWN8ZW58MHx8fHwxNzIwNzM5ODMyfDA&lib=rb-4.0.3&q=80&w=1080", 
+      "https://images.unsplash.com/photo-1582227189585-6ff848386377?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDExfHx3ZWRkaW5nJTIwcHJlbnVwJTIwZmllbGR8ZW58MHx8fHwxNzIwNzM5ODMyfDA&lib=rb-4.0.3&q=80&w=1080", 
+      "https://images.unsplash.com/photo-1542475727-2c9497e70876?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDIyfHx3ZWRkaW5nJTIwcHJlbnVwJTIwcmVhbHxlbnwwfHx8fDE3MjA3Mzk5NTZ8MA&lib=rb-4.0.3&q=80&w=1080", 
+      "https://images.unsplash.com/photo-1627448350029-43c2c13ac36e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzMXwwfDF8c2VhcmNofDIzfHx3ZWRkaW5nJTIwcHJlbnVwfGVufDB8fHx8MTcyMDczOTc5N3ww&lib=rb-4.0.3&q=80&w=1080",
+  ];
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const selectedImage = images[selectedIndex];
+
+  return (
+      // Background: Silver Pink
+      <section id="gallery" className={`py-20 bg-[${COLORS.silverPink}] text-stone-900`}>
+          <div className="container mx-auto px-6 max-w-4xl">
+              <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>
+                  Our Prenup Gallery
+              </h2>
+              <p className={`text-center text-lg mb-10 text-[${COLORS.taupeGray}] italic max-w-2xl mx-auto`}>
+                  A glimpse into the love, laughter, and light that led us to this moment.
+              </p>
+
+              <div className="space-y-4">
+                  {/* --- 1. LARGE PREVIEW IMAGE --- */}
+                  <div className="relative overflow-hidden aspect-video md:aspect-w-16 md:aspect-h-9 rounded-xl shadow-2xl border-4 border-white transition-opacity duration-500">
+                      <img
+                          key={selectedIndex} // Key change forces image re-render/fade
+                          src={selectedImage}
+                          alt={`Prenup Photo ${selectedIndex + 1}`}
+                          className="w-full h-full object-cover animate-fade-in-slow"
+                          onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = `https://placehold.co/1080x608/${COLORS.mountainPink.substring(1)}/EAD6C6?text=Preview+Image`;
+                          }}
+                          style={{ transition: 'opacity 0.5s ease-in-out' }}
+                      />
+                       <Camera className="absolute bottom-4 right-4 w-8 h-8 text-white drop-shadow-lg opacity-80"/>
+                  </div>
+
+                  {/* --- 2. THUMBNAIL ROW --- */}
+                  <div className="flex justify-center space-x-2 md:space-x-4 overflow-x-auto p-2">
+                      {images.map((src, index) => (
+                          <button
+                              key={index}
+                              onClick={() => setSelectedIndex(index)}
+                              className={`
+                                  w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all duration-300 transform 
+                                  shadow-md hover:opacity-90 hover:scale-[1.05]
+                                  ${selectedIndex === index 
+                                      ? `border-4 border-[${COLORS.mountainPink}] scale-[1.08] shadow-lg` 
+                                      : `border-2 border-stone-300 opacity-60`
+                                  }
+                              `}
+                          >
+                              <img
+                                  src={src.replace('w=1080', 'w=200')} // Use smaller image for thumbnail load time
+                                  alt={`Thumbnail ${index + 1}`}
+                                  onError={(e) => {
+                                      const target = e.target as HTMLImageElement;
+                                      target.src = `https://placehold.co/80x80/${COLORS.mountainPink.substring(1)}/EAD6C6?text=T${index+1}`;
+                                  }}
+                                  className="w-full h-full object-cover"
+                              />
+                          </button>
+                      ))}
+                  </div>
+              </div>
+          </div>
+      </section>
+  );
+};
+
+
 /**
  * Section for Prenup/Registry Information.
  */
-const PrenupSection: React.FC = () => (
-  // Background: Almond
-  <section id="prenup" className={`py-20 bg-[${COLORS.almond}] text-stone-900`}>
-    <div className="container mx-auto px-6 max-w-3xl text-center">
-      {/* Headline: Old Lavender */}
-      <h2 className={`text-4xl font-serif mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>Gifts & Registry</h2>
-      
-      <div className="p-10 bg-white shadow-2xl rounded-xl text-center border-t-4 border-[${COLORS.mountainPink}]">
-        <Gift className={`w-10 h-10 mx-auto mb-4 text-[${COLORS.mountainPink}]`} />
-        <h3 className={`text-3xl font-semibold font-serif mb-4 text-[${COLORS.oldLavender}]`}>Your Presence is Our Present</h3>
-        <p className={`mt-4 text-lg text-[${COLORS.taupeGray}] leading-relaxed`}>
-          The most important gift is your presence on our wedding day. However, should you wish to honor us with a gift, we have two options:
-        </p>
-        
-        <div className="grid md:grid-cols-2 gap-6 mt-8">
-            <div className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}]`}>
-                <h4 className="font-bold text-xl mb-2 text-stone-900">Contribution to Our Home</h4>
-                <p className={`text-sm text-[${COLORS.taupeGray}]`}>
-                    We have a small registry for essential home items.
-                </p>
-                <a 
-                    href="#" 
-                    className={`mt-4 inline-block text-[${COLORS.mountainPink}] hover:text-[${COLORS.oldLavender}] text-sm font-semibold transition duration-150 border-b border-[${COLORS.mountainPink}]/50`}
-                >
-                    View Registry Link
-                </a>
-            </div>
-            <div className={`p-6 bg-stone-50 rounded-lg border-l-4 border-[${COLORS.mountainPink}]`}>
-                <h4 className="font-bold text-xl mb-2 text-stone-900">Honeymoon Fund</h4>
-                <p className={`text-sm text-[${COLORS.taupeGray}]`}>
-                    A contribution towards our dream trip to the Italian Coast would be deeply appreciated.
-                </p>
-                <a 
-                    href="#" 
-                    className={`mt-4 inline-block text-[${COLORS.mountainPink}] hover:text-[${COLORS.oldLavender}] text-sm font-semibold transition duration-150 border-b border-[${COLORS.mountainPink}]/50`}
-                >
-                    Contribute Here
-                </a>
-            </div>
+const PrenupSection: React.FC = () => {
+  const giftBgUrl = '/images/ourstory3.jpeg'; // Replace with your gift box background image
+
+  return (
+    // Background: Gradient Old Lavender
+    <section
+      id="prenup"
+      className="py-20 relative text-stone-900"
+      style={{
+        background: 'linear-gradient(135deg, rgb(130,103,112) 0%, rgb(230,210,230) 100%)', // Gradient Old Lavender
+      }}
+    >
+      <div className="container mx-auto px-6 max-w-6xl text-center relative z-10">
+        {/* Headline: Old Lavender */}
+        <h2
+          className="text-6xl font-serif mb-12 border-b-2 pb-2 inline-block"
+          style={{ color: '#EAD6C6', borderColor: '#C4AEB2' }} // Mountain Pink border semi-transparent
+        >
+          Gifts
+        </h2>
+
+        {/* Gift Box Card with bg image and overlay */}
+        <div
+          className="relative p-10 shadow-2xl rounded-xl text-center border-t-4 overflow-hidden"
+          style={{
+            borderColor: '#D88CA1', // Mountain Pink top border
+            color: '#826970', // Old Lavender text for headings
+          }}
+        >
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${giftBgUrl})`, zIndex: 0 }}
+          />
+
+          {/* Overlay */}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 1 }} // 30% dark overlay
+          />
+
+          {/* Content */}
+          <div className="relative z-10">
+            <Gift className="w-30 h-50 mx-auto mb-4 text-[#D88CA1]" />
+            <h3 className="text-3xl font-semibold font-serif mb-4" style={{ color: '#F5F5F5' }}>
+              Your Presence is Our Present
+            </h3>
+            <p className="mt-4 text-lg leading-relaxed" style={{ color: '#F5F5F5' }}>
+            Your presence at our wedding is the greatest gift we could ask for, and we truly look forward to celebrating this special day with you. For those who wish to honor us with a gift, we have created a monetary gift registry to help us start this new chapter together. Your thoughtful gifts will be deeply appreciated, but please know that having you there to share in our joy means the most to us.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
 
+      {/* Optional overlay on section if needed */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: 'rgba(130,103,112,0.1)', zIndex: 0 }}
+      />
+    </section>
+  );
+};
 
 /**
  * Section for key event details (Location).
  */
-const LocationSection: React.FC = () => (
-  // NEW THEME: Old Lavender background
-  <section id="location" className={`py-20 bg-[${COLORS.oldLavender}]`}>
-    <div className="container mx-auto px-6 max-w-4xl">
-      {/* NEW THEME: Almond text, Mountain Pink border */}
-      <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.almond}]`}>Location & Schedule</h2>
-      
-      <div className="grid md:grid-cols-2 gap-8">
-        
-        {/* White cards for contrast */}
-        <div className={`p-8 bg-white shadow-lg rounded-xl transition duration-300 hover:shadow-xl hover:border-b-4 hover:border-[${COLORS.mountainPink}]/80`}>
-          <Calendar className={`w-8 h-8 mb-4 text-[${COLORS.mountainPink}]`} />
-          {/* Headline: Old Lavender */}
-          <h3 className={`text-2xl font-serif mb-4 text-[${COLORS.oldLavender}]`}>The Schedule</h3>
-          <ul className={`space-y-3 text-left text-[${COLORS.taupeGray}]`}>
-            <li className="flex justify-between border-b border-stone-200 pb-2">
-              <span className="font-medium">4:00 PM</span>
-              <span>Ceremony Begins</span>
-            </li>
-            <li className="flex justify-between border-b border-stone-200 pb-2">
-              <span className="font-medium">4:45 PM</span>
-              <span>Cocktail Hour</span>
-            </li>
-            <li className="flex justify-between border-b border-stone-200 pb-2">
-              <span className="font-medium">6:00 PM</span>
-              <span>Dinner Reception</span>
-            </li>
-            <li className="flex justify-between border-b border-stone-200 pb-2">
-              <span className="font-medium">8:00 PM</span>
-              <span>Dancing & Celebration</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="font-medium">10:00 PM</span>
-              <span>Farewell</span>
-            </li>
-          </ul>
+const LocationSection: React.FC = () => {
+  const ceremonyArea = "Jardin de Corazon";
+  const receptionArea = "Sampaguita Hall";
+  const baseAddress = `${COUPLE_INFO.venue}, ${COUPLE_INFO.address}`;
+
+  const ceremonyMapUrl = `https://maps.google.com/?q=${encodeURIComponent(baseAddress + ", " + ceremonyArea)}`;
+  const receptionMapUrl = `https://maps.google.com/?q=${encodeURIComponent(baseAddress + ", " + receptionArea)}`;
+
+  type IconComponent = typeof MapPin | typeof Compass;
+
+  interface DetailCardProps {
+    title: string;
+    time: string;
+    area: string;
+    description: string;
+    isLeft: boolean;
+    mapUrl: string;
+    MapIconComponent: IconComponent;
+  }
+
+  const DetailCard: React.FC<DetailCardProps> = ({
+    title,
+    time,
+    area,
+    description,
+    isLeft,
+    mapUrl,
+    MapIconComponent,
+  }) => (
+    <div
+      className={`p-6 md:p-8 bg-white shadow-2xl rounded-xl transition duration-300 transform hover:scale-[1.01] ${
+        isLeft ? "md:mr-[-3rem]" : "md:ml-[-3rem]"
+      } z-10`}
+    >
+      <div className="flex items-center mb-3">
+        <Calendar className="w-6 h-6 mr-3" style={{ color: COLORS.mountainPink }} />
+        <h3
+          className="text-3xl font-serif"
+          style={{ color: COLORS.oldLavender }}
+        >
+          {title}
+        </h3>
+      </div>
+
+      <p className="text-2xl font-semibold mb-2 text-stone-900">{time}</p>
+      <p
+        className="text-lg italic border-b border-stone-200 pb-3 mb-3"
+        style={{ color: COLORS.taupeGray }}
+      >
+        {area}
+      </p>
+      <p
+        className="text-base leading-relaxed"
+        style={{ color: COLORS.taupeGray }}
+      >
+        {description}
+      </p>
+
+      {/* Map Button */}
+      <a
+        href={mapUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wider shadow-lg transition duration-300 transform hover:scale-[1.03]"
+        style={{
+          backgroundColor: COLORS.mountainPink,
+          color: "white",
+        }}
+      >
+        <MapIconComponent className="w-5 h-5 mr-2" />
+        View Map
+      </a>
+    </div>
+  );
+
+  const ImageBlock: React.FC<{ src: string; alt: string }> = ({ src, alt }) => (
+    <div
+      className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4"
+      style={{ borderColor: COLORS.mountainPink }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.src = `https://placehold.co/800x600/${COLORS.mountainPink.substring(
+            1
+          )}/EAD6C6?text=${alt.replace(/\s/g, "+")}`;
+        }}
+      />
+    </div>
+  );
+
+  return (
+    <section
+      id="location"
+      className="relative py-20"
+      style={{ backgroundColor: COLORS.oldLavender }}
+    >
+      <div className="container mx-auto px-6 max-w-5xl">
+        <h2
+          className="text-4xl font-serif text-center mb-16 border-b-2 pb-2 inline-block"
+          style={{
+            color: COLORS.almond,
+            borderColor: COLORS.mountainPink + "80",
+          }}
+        >
+          The Celebration Venue
+        </h2>
+
+        <p
+          className="text-center text-xl font-medium mb-12"
+          style={{ color: COLORS.almond }}
+        >
+          {COUPLE_INFO.venue}, {COUPLE_INFO.address}
+        </p>
+
+        {/* Ceremony Section */}
+        <div className="grid lg:grid-cols-12 gap-8 items-center mb-20">
+          <div className="lg:col-span-5 order-1">
+            <ImageBlock
+              src="https://images.unsplash.com/photo-1546949987-6e6b01b6062f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
+              alt="Outdoor Ceremony Setup"
+            />
+          </div>
+
+          <div className="lg:col-span-7 order-2">
+            <DetailCard
+              title="The Ceremony"
+              time="2:30 PM"
+              area={ceremonyArea}
+              description="Join us as we exchange vows in the beautiful Jardin de Corazon. Please arrive at least 15–20 minutes early for seating."
+              isLeft={false}
+              mapUrl={ceremonyMapUrl}
+              MapIconComponent={MapPin}
+            />
+          </div>
         </div>
-        
-        <div className={`p-8 bg-white shadow-lg rounded-xl transition duration-300 hover:shadow-xl hover:border-b-4 hover:border-[${COLORS.mountainPink}]/80`}>
-          <MapPin className={`w-8 h-8 mb-4 text-[${COLORS.mountainPink}]`} />
-          {/* Headline: Old Lavender */}
-          <h3 className={`text-2xl font-serif mb-2 text-[${COLORS.oldLavender}]`}>The Venue</h3>
-          <p className="text-xl font-semibold text-stone-900">{COUPLE_INFO.venue}</p>
-          <p className={`text-[${COLORS.taupeGray}] italic mt-1`}>{COUPLE_INFO.address}</p>
-          <div className="mt-6">
-            <a 
-              href={`https://maps.google.com/?q=${encodeURIComponent(COUPLE_INFO.address)}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className={`inline-flex items-center px-4 py-2 bg-[${COLORS.mountainPink}] text-white rounded-lg hover:bg-[${COLORS.oldLavender}] transition duration-150 text-sm font-medium shadow-md`}
-            >
-              Get Directions
-            </a>
+
+        {/* Reception Section */}
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 order-2 lg:order-1">
+            <DetailCard
+              title="The Reception"
+              time="6:00 PM"
+              area={receptionArea}
+              description="Celebrate with dinner, drinks, and dancing immediately following the ceremony in the elegant Sampaguita Hall. Let the party begin!"
+              isLeft={true}
+              mapUrl={receptionMapUrl}
+              MapIconComponent={Compass}
+            />
+          </div>
+
+          <div className="lg:col-span-5 order-1 lg:order-2">
+            <ImageBlock
+              src="https://images.unsplash.com/photo-1577764724778-9e52516d00e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
+              alt="Indoor Reception Hall"
+            />
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
+
 
 /**
  * Section for wedding entourage/party.
  */
 const EntourageSection: React.FC = () => (
-  // Background: Almond
-  <section id="entourage" className={`py-20 bg-[${COLORS.almond}] text-stone-900`}>
-    <div className="container mx-auto px-6 max-w-4xl text-center">
-      {/* Headline: Old Lavender */}
-      <h2 className={`text-4xl font-serif text-center mb-12 border-b-2 border-[${COLORS.mountainPink}]/50 pb-2 inline-block text-[${COLORS.oldLavender}]`}>The Wedding Party</h2>
-      
-      <div className="grid md:grid-cols-2 gap-12 text-left">
-        
+  // Background: Silver Pink (so itconst EntourageSection: React.FC = () => (
+  <section
+  id="entourage"
+  className="py-20 text-stone-900"
+  style={{ backgroundColor: COLORS.silverPink }} // ✅ Fixed bg color
+>
+  <div className="container mx-auto px-6 max-w-6xl">
+    {/* Headline */}
+    <h2
+      className="text-4xl font-serif text-center mb-16 border-b-2 pb-2 inline-block"
+      style={{
+        color: COLORS.oldLavender,
+        borderColor: COLORS.mountainPink + "80",
+      }}
+    >
+      The Entourage
+    </h2>
+
+    {/* 1. Parents & Core Bridal Party */}
+    <div
+      className="bg-white p-8 md:p-12 rounded-xl shadow-2xl mb-12 border-t-4"
+      style={{ borderColor: COLORS.oldLavender }}
+    >
+      <h3
+        className="text-3xl font-serif text-center mb-8"
+        style={{ color: COLORS.mountainPink }}
+      >
+        Parents of the Bride & Groom
+      </h3>
+
+      <div className="grid md:grid-cols-2 gap-8 text-center mb-10 border-b pb-8 border-stone-200">
+        {/* Groom’s Parents */}
         <div>
-          <h3 className={`text-3xl font-serif mb-6 text-[${COLORS.oldLavender}]`}>Deanne's Side</h3>
-          <ul className={`space-y-4 text-lg text-[${COLORS.taupeGray}]`}>
-            <li><span className="font-bold">Maid of Honor:</span> Sarah Chen</li>
-            <li><span className="font-bold">Bridesmaid:</span> Maya Patel</li>
-            <li><span className="font-bold">Bridesmaid:</span> Jessica Lee</li>
-            <li><span className="font-bold">Bridesmaid:</span> Olivia Rodriguez</li>
+          <h4
+            className="text-xl font-bold mb-2"
+            style={{ color: COLORS.oldLavender }}
+          >
+            Parents of the Groom
+          </h4>
+          <p style={{ color: COLORS.taupeGray }}>
+            {COUPLE_INFO.parentsGroom.father}
+          </p>
+          <p style={{ color: COLORS.taupeGray }}>
+            {COUPLE_INFO.parentsGroom.mother}
+          </p>
+        </div>
+
+        {/* Bride’s Parents */}
+        <div>
+          <h4
+            className="text-xl font-bold mb-2"
+            style={{ color: COLORS.oldLavender }}
+          >
+            Parents of the Bride
+          </h4>
+          <p style={{ color: COLORS.taupeGray }}>
+            {COUPLE_INFO.parentsBride.father}
+          </p>
+          <p style={{ color: COLORS.taupeGray }}>
+            {COUPLE_INFO.parentsBride.mother}
+          </p>
+        </div>
+      </div>
+
+      <h3
+        className="text-3xl font-serif text-center mb-8"
+        style={{ color: COLORS.mountainPink }}
+      >
+        Best Men & Maids of Honor
+      </h3>
+
+      <div className="grid md:grid-cols-3 gap-8 text-center">
+        {/* Best Men */}
+        <div>
+          <h4
+            className="text-xl font-bold mb-3 border-b-2 inline-block"
+            style={{
+              color: COLORS.oldLavender,
+              borderColor: COLORS.silverPink,
+            }}
+          >
+            Best Men
+          </h4>
+          <ul className="space-y-1 text-base" style={{ color: COLORS.taupeGray }}>
+            {ENTOURAGE_DATA.bestMan.map((name, i) => (
+              <li key={i}>{name}</li>
+            ))}
           </ul>
         </div>
 
+        {/* Maids of Honor */}
         <div>
-          <h3 className={`text-3xl font-serif mb-6 text-[${COLORS.oldLavender}]`}>Ulysses's Side</h3>
-          <ul className={`space-y-4 text-lg text-[${COLORS.taupeGray}]`}>
-            <li><span className="font-bold">Best Man:</span> Alex Johnson</li>
-            <li><span className="font-bold">Groomsman:</span> Ben Carter</li>
-            <li><span className="font-bold">Groomsman:</span> Michael Hsu</li>
-            <li><span className="font-bold">Groomsman:</span> David Kim</li>
+          <h4
+            className="text-xl font-bold mb-3 border-b-2 inline-block"
+            style={{
+              color: COLORS.oldLavender,
+              borderColor: COLORS.silverPink,
+            }}
+          >
+            Maids of Honor
+          </h4>
+          <ul className="space-y-1 text-base" style={{ color: COLORS.taupeGray }}>
+            {ENTOURAGE_DATA.maidsOfHonor.map((name, i) => (
+              <li key={i}>{name}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Matron of Honor */}
+        <div>
+          <h4
+            className="text-xl font-bold mb-3 border-b-2 inline-block"
+            style={{
+              color: COLORS.oldLavender,
+              borderColor: COLORS.silverPink,
+            }}
+          >
+            Matron of Honor
+          </h4>
+          <ul className="space-y-1 text-base" style={{ color: COLORS.taupeGray }}>
+            {ENTOURAGE_DATA.matronOfHonor.map((name, i) => (
+              <li key={i}>{name}</li>
+            ))}
           </ul>
         </div>
       </div>
-      <p className={`text-md italic text-stone-500 mt-12`}>
-        Thank you to our amazing friends and family for standing by us.
-      </p>
     </div>
-  </section>
+
+    {/* 2. Principal Sponsors */}
+    <div
+      className="p-8 md:p-12 rounded-xl shadow-2xl border-t-4"
+      style={{
+        borderColor: COLORS.mountainPink,
+        backgroundColor: COLORS.almond,
+      }}
+    >
+      <h3
+        className="text-3xl font-serif text-center mb-8"
+        style={{ color: COLORS.oldLavender }}
+      >
+        Principal Sponsors (Ninongs & Ninangs)
+      </h3>
+
+      <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
+        {/* Gentlemen */}
+        <div>
+          <h4
+            className="text-xl font-bold mb-4 text-center"
+            style={{ color: COLORS.mountainPink }}
+          >
+            Gentlemen
+          </h4>
+          <ul className="space-y-1 text-sm" style={{ color: COLORS.taupeGray }}>
+            {ENTOURAGE_DATA.principalSponsors.male.map((name, i) => (
+              <li
+                key={i}
+                className="py-0.5 border-b border-stone-200 last:border-b-0 text-center"
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Ladies */}
+        <div>
+          <h4
+            className="text-xl font-bold mb-4 text-center"
+            style={{ color: COLORS.mountainPink }}
+          >
+            Ladies
+          </h4>
+          <ul className="space-y-1 text-sm" style={{ color: COLORS.taupeGray }}>
+            {ENTOURAGE_DATA.principalSponsors.female.map((name, i) => (
+              <li
+                key={i}
+                className="py-0.5 border-b border-stone-200 last:border-b-0 text-center"
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {/* 3. Secondary Sponsors */}
+    <div className="p-8 md:p-12 rounded-xl shadow-2xl mt-12 bg-white">
+      <h3
+        className="text-3xl font-serif text-center mb-8"
+        style={{ color: COLORS.oldLavender }}
+      >
+        Secondary Sponsors
+      </h3>
+
+      <div className="grid md:grid-cols-3 gap-8 text-center">
+        {ENTOURAGE_DATA.secondarySponsors.map((sponsor, i) => (
+          <div
+            key={i}
+            className="p-4 rounded-lg border border-stone-200 shadow-sm"
+          >
+            <h4
+              className="text-2xl font-serif font-semibold mb-3"
+              style={{ color: COLORS.mountainPink }}
+            >
+              {sponsor.role}
+            </h4>
+            <p style={{ color: COLORS.taupeGray }}>{sponsor.couple[0]}</p>
+            <p className="text-sm text-stone-500 my-1 italic">and</p>
+            <p style={{ color: COLORS.taupeGray }}>{sponsor.couple[1]}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 );
+
 
 /**
  * Section for Dress Code information.
@@ -1066,12 +1491,13 @@ const HomePage: React.FC = () => (
  * Contains Prenup, Location, Entourage, and Dress Code sections.
  */
 const DetailsPage: React.FC = () => (
-    <div id="details-top" className="pt-20"> 
-        <PrenupSection />
-        <LocationSection />
-        <EntourageSection />
-        <DressCodeSection />
-    </div>
+  <div id="details-top" className="pt-20"> 
+      <PrenupGallerySection /> {/* New Gallery Section */}
+      <PrenupSection />      {/* Renamed/Updated Gifts Section */}
+      <LocationSection />
+      <EntourageSection />
+      <DressCodeSection />
+  </div>
 );
 
 
