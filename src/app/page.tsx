@@ -184,28 +184,48 @@ const TextCarousel: React.FC = () => {
 };
 
 // --- NavBar with expanded PageType ---
-const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType) => void }> = ({ currentPage, setCurrentPage }) => {
+const NavBar: React.FC<{
+  currentPage: PageType;
+  setCurrentPage: (page: PageType) => void;
+}> = ({ currentPage, setCurrentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const handleNavClick = useCallback((page: PageType, section: string) => {
-    setCurrentPage(page);
-    setIsOpen(false);
-    document.querySelector(section)?.scrollIntoView({ behavior: 'smooth' });
-  }, [setCurrentPage]);
+  // ✅ Fixed smooth scroll logic with slight delay and navbar offset
+  const handleNavClick = useCallback(
+    (page: PageType, section: string) => {
+      setCurrentPage(page);
+      setIsOpen(false);
 
+      // Wait a short moment for React re-render (important for smooth single-click behavior)
+      setTimeout(() => {
+        const el = document.querySelector(section) as HTMLElement;
+        if (el) {
+          const yOffset = -80; // offset for fixed navbar height
+          const y =
+            el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }, 100); // 100ms delay fixes double-click issue
+    },
+    [setCurrentPage]
+  );
+
+  // Handle navbar background on scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <nav
       style={{
-        backgroundColor: scrolled ? 'rgba(121,106,126,0.85)' : COLORS.oldLavender,
-        backdropFilter: scrolled ? 'blur(6px)' : undefined,
-        transition: 'background-color 0.3s',
+        backgroundColor: scrolled
+          ? "rgba(121,106,126,0.85)"
+          : COLORS.oldLavender,
+        backdropFilter: scrolled ? "blur(6px)" : undefined,
+        transition: "background-color 0.3s",
       }}
       className="fixed top-0 left-0 w-full z-50 shadow-lg"
     >
@@ -214,7 +234,7 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
           {/* Logo */}
           <a
             href="#home"
-            onClick={() => handleNavClick('home', '#home')}
+            onClick={() => handleNavClick("home", "#home")}
             style={{ color: COLORS.almond }}
             className="text-xl sm:text-2xl font-serif font-bold tracking-widest"
           >
@@ -223,14 +243,17 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
 
           {/* Desktop Links */}
           <div className="hidden lg:flex space-x-6">
-            {NAV_LINKS.map(link => (
+            {NAV_LINKS.map((link) => (
               <button
                 key={link.name}
-                onClick={() => handleNavClick(link.page as PageType, link.section)}
+                onClick={() =>
+                  handleNavClick(link.page as PageType, link.section)
+                }
                 style={{
-                  color: currentPage === link.page ? COLORS.almond : COLORS.almond,
-                  fontWeight: currentPage === link.page ? 'bold' : 'normal',
-                  position: 'relative',
+                  color: COLORS.almond,
+                  fontWeight:
+                    currentPage === link.page ? "bold" : "normal",
+                  position: "relative",
                 }}
                 className="text-sm font-serif transition duration-200 uppercase tracking-widest relative px-1 py-2"
               >
@@ -251,17 +274,27 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
             style={{ color: COLORS.almond }}
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
 
+      {/* Mobile Dropdown */}
       {isOpen && (
-        <div style={{ backgroundColor: COLORS.taupeGray }} className="lg:hidden pb-4 transition-all duration-300 ease-in-out">
-          {NAV_LINKS.map(link => (
+        <div
+          style={{ backgroundColor: COLORS.taupeGray }}
+          className="lg:hidden pb-4 transition-all duration-300 ease-in-out"
+        >
+          {NAV_LINKS.map((link) => (
             <button
               key={link.name}
-              onClick={() => handleNavClick(link.page as PageType, link.section)}
+              onClick={() =>
+                handleNavClick(link.page as PageType, link.section)
+              }
               style={{
                 color: COLORS.almond,
                 borderTop: `1px solid ${COLORS.almond}33`, // 20% opacity
@@ -276,7 +309,6 @@ const NavBar: React.FC<{ currentPage: PageType, setCurrentPage: (page: PageType)
     </nav>
   );
 };
-
 
 /**
  * The main cover section (Hero).
@@ -557,13 +589,12 @@ const InviteSection: React.FC = () => {
  * Component to simulate stacked photo album pages.
  */
 const BookOfMemories: React.FC = () => {
-  // Use smaller images for mobile optimization
   const pages = [
-    { key: 1, image: 'images/ourstory5.jpeg', label: "Our First Date" },
-    { key: 2, image: 'images/ourstory2.jpeg', label: "The Proposal" },
-    { key: 3, image: 'images/ourstory3.jpeg', label: "Travels" },
-    { key: 4, image: 'images/ourstory4.jpeg', label: "Adventures" },
-    { key: 5, image: 'images/ourstory1.jpeg', label: "Our Family" },
+    { key: 1, image: 'images/ourstory5.jpeg' },
+    { key: 2, image: 'images/ourstory2.jpeg' },
+    { key: 3, image: 'images/ourstory3.jpeg' },
+    { key: 4, image: 'images/ourstory4.jpeg' },
+    { key: 5, image: 'images/ourstory1.jpeg' },
   ];
 
   const [topIndex, setTopIndex] = useState(pages.length - 1);
@@ -573,7 +604,7 @@ const BookOfMemories: React.FC = () => {
   };
 
   const baseStyle =
-    "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 p-4 transform transition duration-500 ease-in-out cursor-pointer";
+    "absolute w-full h-full bg-cover bg-center rounded-lg shadow-xl border border-stone-200 transform transition duration-500 ease-in-out cursor-pointer";
 
   // Only keep 3 cards in DOM for performance
   const getVisiblePages = () => {
@@ -582,7 +613,7 @@ const BookOfMemories: React.FC = () => {
       const idx = (topIndex - i + pages.length) % pages.length;
       visible.push(pages[idx]);
     }
-    return visible.reverse(); // So top page is rendered last
+    return visible.reverse(); // Top page renders last
   };
 
   const rotations = ['-rotate-3', 'rotate-1', '-rotate-1'];
@@ -593,25 +624,19 @@ const BookOfMemories: React.FC = () => {
       {getVisiblePages().map((page, idx) => (
         <div
           key={page.key}
-          className={`${baseStyle} ${rotations[idx]} ${translates[idx]} flex items-center justify-center text-center font-serif italic`}
+          className={`${baseStyle} ${rotations[idx]} ${translates[idx]}`}
           style={{
             backgroundImage: `url(${page.image})`,
-            color: '#F5F5F5',
             zIndex: idx + 1,
             top: `${idx * 5}px`,
             left: 0,
           }}
           onClick={handleClick}
-        >
-          <div className="bg-black/30 px-2 py-1 rounded">
-            <span className="text-sm uppercase tracking-wider">{page.label}</span>
-          </div>
-        </div>
+        />
       ))}
     </div>
   );
 };
-
 
 /**
  * Section for the couple's story (Story).
@@ -1583,15 +1608,14 @@ const EntourageSection: React.FC = () => (
  */
 const DressCodeSection: React.FC = () => (
   <section
-    id= "dresscode"
+    id="dresscode"
     className="relative py-24 text-stone-900 bg-fixed bg-center bg-cover"
     style={{
-      backgroundImage: "url('/images/prenup20.jpeg')", // 🖼️ replace with your image path
+      backgroundImage: "url('/images/prenup20.jpeg')",
     }}
   >
     {/* Overlay */}
     <div
-    id= "dresscode"
       className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"
       aria-hidden="true"
     ></div>
@@ -1613,8 +1637,10 @@ const DressCodeSection: React.FC = () => (
         {/* Attire Info */}
         <div className="space-y-10 text-left">
           {/* Principal Sponsors */}
-          <div className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
-            style={{ borderColor: "#D88CA1" }}>
+          <div
+            className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
+            style={{ borderColor: "#D88CA1" }}
+          >
             <h4
               className="font-serif text-2xl mb-3"
               style={{ color: "#796878" }}
@@ -1630,8 +1656,10 @@ const DressCodeSection: React.FC = () => (
           </div>
 
           {/* Guests */}
-          <div className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
-            style={{ borderColor: "#D88CA1" }}>
+          <div
+            className="p-6 bg-stone-50 rounded-lg border-l-4 shadow-sm"
+            style={{ borderColor: "#D88CA1" }}
+          >
             <h4
               className="font-serif text-2xl mb-3"
               style={{ color: "#796878" }}
@@ -1652,7 +1680,8 @@ const DressCodeSection: React.FC = () => (
           className="mt-12 text-base md:text-lg text-center italic border-t border-stone-200 pt-6"
           style={{ color: "#8B8589" }}
         >
-         We kindly ask all guests to follow the suggested attire for a cohesive and elegant celebration.
+          We kindly ask all guests to follow the suggested attire for a cohesive
+          and elegant celebration.
         </p>
 
         {/* Visual Examples */}
@@ -1689,17 +1718,35 @@ const DressCodeSection: React.FC = () => (
               </div>
             </div>
 
-            {/* NEW: Color Palette / Theme */}
+            {/* Color Theme */}
             <div className="flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition">
               <img
-                src="/images/dress1.png" // 🖼️ new image here
+                src="/images/dress1.png"
                 alt="Wedding Color Theme"
                 className="w-full h-auto object-cover"
               />
               <div className="bg-gray-50 p-4 text-center text-sm font-medium text-gray-700">
-                Wedding Color Palette Inspiration. Barong Tagalog and Filipiniana.
+                Wedding Color Palette Inspiration
               </div>
             </div>
+          </div>
+
+          {/* 🎨 Color Palette Circles */}
+          <div className="flex justify-center items-center gap-6 mt-12">
+            {[
+              "#906272", // mountainPink
+              "#C4AEB2", // silverPink
+              "#EAD6C6", // almond
+              "#878784", // taupeGray
+              "#796A7E", // oldLavender
+            ].map((color, idx) => (
+              <div
+                key={idx}
+                className="w-12 h-12 rounded-full shadow-md border border-white"
+                style={{ backgroundColor: color }}
+                title={color}
+              ></div>
+            ))}
           </div>
         </div>
       </div>
@@ -1855,7 +1902,7 @@ const FooterSection: React.FC = () => (
         </div>
         <div className="flex items-center">
           <Mail className="w-4 h-4 mr-2" style={{ color: COLORS.mountainPink }} />
-          <span>Contact: hello@ulyssesanddeanne.com</span>
+          <span>Contact: ulyssesdeanne.thejcstudios.com</span>
         </div>
       </div>
       <p className="mt-8 text-xs" style={{ color: COLORS.silverPink }}>
