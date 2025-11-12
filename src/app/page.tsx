@@ -645,72 +645,96 @@ const PreludeSection: React.FC = () => (
   <section
     id="story"
     className="py-20"
-    style={{ backgroundColor: COLORS.almond, color: '#1f2937' }} // base text color
+    style={{ backgroundColor: COLORS.almond, color: "#1f2937" }}
   >
     <div className="container mx-auto px-6 max-w-6xl">
-      {/* Headline: Old Lavender */}
+      {/* Headline */}
       <h2
         className="text-4xl font-serif text-center mb-12 border-b-2 pb-2 inline-block"
         style={{
           color: COLORS.oldLavender,
-          borderColor: `${COLORS.mountainPink}80`, // 50% opacity
+          borderColor: `${COLORS.mountainPink}80`,
         }}
       >
         Our Story
       </h2>
 
       <div className="grid lg:grid-cols-12 gap-12 items-center">
-        {/* LEFT COLUMN: Book/Image Fanning Effect (Col Span 5) */}
+        {/* LEFT COLUMN */}
         <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
           <BookOfMemories />
         </div>
 
-        {/* RIGHT COLUMN: Story Text (Col Span 7) */}
+        {/* RIGHT COLUMN */}
         <div className="lg:col-span-7 text-center lg:text-left order-1 lg:order-2">
-  <p className="text-lg leading-relaxed mb-6" style={{ color: COLORS.taupeGray }}>
-    <Typewriter
-      words={[
-        "Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES."
-      ]}
-      loop={1}
-      cursor
-      cursorStyle="|"
-      typeSpeed={30}
-      deleteSpeed={0}
-      delaySpeed={1000}
-    />
-  </p>
+          <p
+            className="text-lg leading-relaxed mb-6"
+            style={{ color: COLORS.taupeGray }}
+          >
+            <Typewriter
+              words={[
+                "Before we knew it, those messages became memories, and those memories became love. On May 31, 2025, Ulysses proposed at the perfect moment, with both of our families present. And with a heart full of joy, I said YES.",
+              ]}
+              loop={1}
+              cursor
+              cursorStyle="|"
+              typeSpeed={30}
+              deleteSpeed={0}
+              delaySpeed={1000}
+            />
+          </p>
 
-  <p className="text-lg leading-relaxed mb-8" style={{ color: COLORS.taupeGray }}>
-    <Typewriter
-      words={[
-        "After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared."
-      ]}
-      loop={1}
-      cursor
-      cursorStyle="|"
-      typeSpeed={30}
-      deleteSpeed={0}
-      delaySpeed={1000}
-    />
-  </p>
+          <p
+            className="text-lg leading-relaxed mb-8"
+            style={{ color: COLORS.taupeGray }}
+          >
+            <Typewriter
+              words={[
+                "After eight years of building our life together—six of which we've shared a home, dreams, and the beautiful chaos of parenthood with our little four-year-old—we've come to a moment that feels both natural and extraordinary. Every sleepless night, every laughter-filled morning, every small victory and setback has woven us closer, shaping a family that is ours alone. So here we are, ready to take the next step—not just as partners, not just as parents, but as lifelong companions—asking each other, with full hearts, to make this commitment official: to promise, forever, the love and life we've already so beautifully shared.",
+              ]}
+              loop={1}
+              cursor
+              cursorStyle="|"
+              typeSpeed={30}
+              deleteSpeed={0}
+              delaySpeed={1000}
+            />
+          </p>
 
-  <p className="text-xl font-serif italic" style={{ color: COLORS.oldLavender }}>
-    <Typewriter
-      words={["\"Every great love story is beautiful, but ours is my favorite.\""]}
-      loop={1}
-      cursor
-      cursorStyle="|"
-      typeSpeed={40}
-      deleteSpeed={0}
-      delaySpeed={1000}
-    />
-  </p>
-</div>
+          <p
+            className="text-xl font-serif italic"
+            style={{ color: COLORS.oldLavender }}
+          >
+            <Typewriter
+              words={[
+                '"Every great love story is beautiful, but ours is my favorite."',
+              ]}
+              loop={1}
+              cursor
+              cursorStyle="|"
+              typeSpeed={40}
+              deleteSpeed={0}
+              delaySpeed={1000}
+            />
+          </p>
+        </div>
+      </div>
+
+      {/* VIDEO SECTION */}
+      <div className="mt-16 flex justify-center">
+        <div className="w-full max-w-3xl aspect-video rounded-xl overflow-hidden shadow-lg border border-stone-200">
+          <iframe
+            src="https://drive.google.com/file/d/1Mrl-D_cLJKZuGMP3ummKdyzgsOb9E4vn/preview"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            className="w-full h-full"
+          ></iframe>
+        </div>
       </div>
     </div>
   </section>
 );
+
 
 /**
  * Section for the Countdown Timer (Countdown).
